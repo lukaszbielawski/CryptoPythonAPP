@@ -1,0 +1,16 @@
+<RCC>
+  <qresource prefix="logo">
+    <file>logo.png</file>
+  </qresource>
+  <qresource prefix="plus">
+    <file>plus_fill.png</file>
+    <file>plus_empty.png</file>
+  </qresource>
+  <qresource prefix="trash">
+    <file>trash_bin.png</file>
+  </qresource>
+  <qresource prefix="star">
+    <file>star_empty.png</file>
+    <file>star_fill.png</file>
+  </qresource>
+</RCC>
