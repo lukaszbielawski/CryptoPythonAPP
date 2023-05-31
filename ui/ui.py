@@ -12,31 +12,35 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Ui_Form(object):
+    
+    def __init__(self, ratio):
+        self.ratio = ratio
+
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(1920, 1080)
-        Form.setMinimumSize(QtCore.QSize(1920, 1080))
-        Form.setMaximumSize(QtCore.QSize(1920, 1080))
+        Form.resize(int(1920 * self.ratio), int(1080 * self.ratio))
+        Form.setMinimumSize(QtCore.QSize(int(1920 * self.ratio), int(1080 * self.ratio)))
+        Form.setMaximumSize(QtCore.QSize(int(1920 * self.ratio), int(1080 * self.ratio)))
         Form.setStyleSheet("background-color: #171717;")
         self.quit_button = QtWidgets.QToolButton(Form)
-        self.quit_button.setGeometry(QtCore.QRect(1890, 0, 30, 30))
+        self.quit_button.setGeometry(QtCore.QRect(int(1890), 0, int(30), int(30)))
         self.quit_button.setStyleSheet("background: #ff5252;\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 20px;")
+"font-size: " + str(int(20 * self.ratio)) + "px;")
         self.quit_button.setObjectName("quit_button")
         self.layoutWidget = QtWidgets.QWidget(Form)
-        self.layoutWidget.setGeometry(QtCore.QRect(30, 30, 1861, 1051))
+        self.layoutWidget.setGeometry(QtCore.QRect(int(30 * self.ratio), int(30 * self.ratio), int(1861 * self.ratio), int(1051 * self.ratio)))
         self.layoutWidget.setObjectName("layoutWidget")
         self.main_layout = QtWidgets.QVBoxLayout(self.layoutWidget)
         self.main_layout.setContentsMargins(0, 0, 0, 0)
-        self.main_layout.setSpacing(20)
+        self.main_layout.setSpacing(int(20 * self.ratio))
         self.main_layout.setObjectName("main_layout")
         self.tooltip_layout = QtWidgets.QHBoxLayout()
-        self.tooltip_layout.setSpacing(20)
+        self.tooltip_layout.setSpacing(int(20 * self.ratio))
         self.tooltip_layout.setObjectName("tooltip_layout")
         self.main_button = QtWidgets.QPushButton(self.layoutWidget)
-        self.main_button.setMinimumSize(QtCore.QSize(100, 100))
+        self.main_button.setMinimumSize(QtCore.QSize(int(100 * self.ratio), int(100 * self.ratio)))
         self.main_button.setStyleSheet("border-image: url(./resources/logo.png);\n"
 "border-radius: 50%;")
         self.main_button.setText("")
@@ -46,17 +50,17 @@ class Ui_Form(object):
         self.favourites_button.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 32px;")
+"font-size: " + str(int(32 * self.ratio)) + "px;")
         self.favourites_button.setObjectName("favourites_button")
         self.tooltip_layout.addWidget(self.favourites_button)
         self.my_portfolio_button = QtWidgets.QPushButton(self.layoutWidget)
         self.my_portfolio_button.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 32px;")
+"font-size: " + str(int(32 * self.ratio)) + "px;")
         self.my_portfolio_button.setObjectName("my_portfolio_button")
         self.tooltip_layout.addWidget(self.my_portfolio_button)
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem = QtWidgets.QSpacerItem(int(40 * self.ratio), int(20 * self.ratio), QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.tooltip_layout.addItem(spacerItem)
         self.main_layout.addLayout(self.tooltip_layout)
         self.toolbar_line = QtWidgets.QFrame(self.layoutWidget)
@@ -72,14 +76,14 @@ class Ui_Form(object):
         self.master_widget = QtWidgets.QWidget()
         self.master_widget.setObjectName("master_widget")
         self.layoutWidget1 = QtWidgets.QWidget(self.master_widget)
-        self.layoutWidget1.setGeometry(QtCore.QRect(20, 10, 1821, 901))
+        self.layoutWidget1.setGeometry(QtCore.QRect(int(20 * self.ratio), int(10 * self.ratio), int(1821 * self.ratio), int(901 * self.ratio)))
         self.layoutWidget1.setObjectName("layoutWidget1")
         self.master_layout = QtWidgets.QVBoxLayout(self.layoutWidget1)
         self.master_layout.setContentsMargins(0, 0, 0, 0)
-        self.master_layout.setSpacing(20)
+        self.master_layout.setSpacing(int(20 * self.ratio))
         self.master_layout.setObjectName("master_layout")
         self.market_cap_label_layout = QtWidgets.QHBoxLayout()
-        self.market_cap_label_layout.setSpacing(4)
+        self.market_cap_label_layout.setSpacing(int(4 * self.ratio))
         self.market_cap_label_layout.setObjectName("market_cap_label_layout")
         self.market_cap_prefix_label = QtWidgets.QLabel(self.layoutWidget1)
         self.market_cap_prefix_label.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
@@ -95,23 +99,23 @@ class Ui_Form(object):
 "font-size:20px;")
         self.market_cap_suffix_label.setObjectName("market_cap_suffix_label")
         self.market_cap_label_layout.addWidget(self.market_cap_suffix_label)
-        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem1 = QtWidgets.QSpacerItem(int(40 * self.ratio), int(20 * self.ratio), QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.market_cap_label_layout.addItem(spacerItem1)
         self.master_layout.addLayout(self.market_cap_label_layout)
         self.global_widgets_layout = QtWidgets.QHBoxLayout()
-        self.global_widgets_layout.setSpacing(20)
+        self.global_widgets_layout.setSpacing(int(20 * self.ratio))
         self.global_widgets_layout.setObjectName("global_widgets_layout")
         self.market_cap_widget = QtWidgets.QWidget(self.layoutWidget1)
-        self.market_cap_widget.setMaximumSize(QtCore.QSize(16777215, 90))
+        self.market_cap_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.market_cap_widget.setStyleSheet("background: #232323;\n"
 "border-radius: 25%;\n"
 "")
         self.market_cap_widget.setObjectName("market_cap_widget")
         self.horizontalLayoutWidget_2 = QtWidgets.QWidget(self.market_cap_widget)
-        self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(0, 0, 281, 91))
+        self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(0, 0, int(281 * self.ratio), int(91 * self.ratio)))
         self.horizontalLayoutWidget_2.setObjectName("horizontalLayoutWidget_2")
         self.market_cap_widget_hlayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_2)
-        self.market_cap_widget_hlayout.setContentsMargins(25, 20, 25, 20)
+        self.market_cap_widget_hlayout.setContentsMargins(int(25 * self.ratio), int(20 * self.ratio), int(25 * self.ratio), int(20 * self.ratio))
         self.market_cap_widget_hlayout.setObjectName("market_cap_widget_hlayout")
         self.market_cap_widget_vlayout = QtWidgets.QVBoxLayout()
         self.market_cap_widget_vlayout.setObjectName("market_cap_widget_vlayout")
@@ -119,30 +123,30 @@ class Ui_Form(object):
         self.market_cap_widget_value.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 24px;")
+"font-size: " + str(int(24 * self.ratio)) + "px;")
         self.market_cap_widget_value.setObjectName("market_cap_widget_value")
         self.market_cap_widget_vlayout.addWidget(self.market_cap_widget_value)
         self.market_cap_widget_label = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
         self.market_cap_widget_label.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: #808080;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 18px;")
+"font-size: " + str(int(18 * self.ratio)) + "px;")
         self.market_cap_widget_label.setObjectName("market_cap_widget_label")
         self.market_cap_widget_vlayout.addWidget(self.market_cap_widget_label)
         self.market_cap_widget_vlayout.setStretch(1, 1)
         self.market_cap_widget_hlayout.addLayout(self.market_cap_widget_vlayout)
         self.global_widgets_layout.addWidget(self.market_cap_widget)
         self.trading_volume_widget = QtWidgets.QWidget(self.layoutWidget1)
-        self.trading_volume_widget.setMaximumSize(QtCore.QSize(16777215, 90))
+        self.trading_volume_widget.setMaximumSize(QtCore.QSize(16777215, int(90)))
         self.trading_volume_widget.setStyleSheet("background: #232323;\n"
 "border-radius: 25%;\n"
 "")
         self.trading_volume_widget.setObjectName("trading_volume_widget")
         self.horizontalLayoutWidget_3 = QtWidgets.QWidget(self.trading_volume_widget)
-        self.horizontalLayoutWidget_3.setGeometry(QtCore.QRect(0, 0, 281, 91))
+        self.horizontalLayoutWidget_3.setGeometry(QtCore.QRect(0, 0, int(281 * self.ratio), int(91 * self.ratio)))
         self.horizontalLayoutWidget_3.setObjectName("horizontalLayoutWidget_3")
         self.trading_volume_widget_hlayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_3)
-        self.trading_volume_widget_hlayout.setContentsMargins(25, 20, 25, 20)
+        self.trading_volume_widget_hlayout.setContentsMargins(int(25 * self.ratio), int(20 * self.ratio), int(25 * self.ratio), int(20 * self.ratio))
         self.trading_volume_widget_hlayout.setObjectName("trading_volume_widget_hlayout")
         self.trading_volume_widget_vlayout = QtWidgets.QVBoxLayout()
         self.trading_volume_widget_vlayout.setObjectName("trading_volume_widget_vlayout")
@@ -150,30 +154,30 @@ class Ui_Form(object):
         self.trading_volume_widget_value.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 24px;")
+"font-size: " + str(int(24 * self.ratio)) + "px;")
         self.trading_volume_widget_value.setObjectName("trading_volume_widget_value")
         self.trading_volume_widget_vlayout.addWidget(self.trading_volume_widget_value)
         self.trading_volume_widget_label = QtWidgets.QLabel(self.horizontalLayoutWidget_3)
         self.trading_volume_widget_label.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: #808080;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 18px;")
+"font-size: " + str(int(18 * self.ratio)) + "px;")
         self.trading_volume_widget_label.setObjectName("trading_volume_widget_label")
         self.trading_volume_widget_vlayout.addWidget(self.trading_volume_widget_label)
         self.trading_volume_widget_vlayout.setStretch(0, 2)
         self.trading_volume_widget_hlayout.addLayout(self.trading_volume_widget_vlayout)
         self.global_widgets_layout.addWidget(self.trading_volume_widget)
         self.btc_dominance_widget = QtWidgets.QWidget(self.layoutWidget1)
-        self.btc_dominance_widget.setMaximumSize(QtCore.QSize(16777215, 90))
+        self.btc_dominance_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.btc_dominance_widget.setStyleSheet("background: #232323;\n"
 "border-radius: 25%;\n"
 "")
         self.btc_dominance_widget.setObjectName("btc_dominance_widget")
         self.horizontalLayoutWidget_4 = QtWidgets.QWidget(self.btc_dominance_widget)
-        self.horizontalLayoutWidget_4.setGeometry(QtCore.QRect(0, 0, 291, 91))
+        self.horizontalLayoutWidget_4.setGeometry(QtCore.QRect(0, 0, int(291 * self.ratio), int(91 * self.ratio)))
         self.horizontalLayoutWidget_4.setObjectName("horizontalLayoutWidget_4")
         self.btc_dominance_widget_hlayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_4)
-        self.btc_dominance_widget_hlayout.setContentsMargins(25, 20, 15, 20)
+        self.btc_dominance_widget_hlayout.setContentsMargins(int(25 * self.ratio), int(20 * self.ratio), int(15 * self.ratio), int(20 * self.ratio))
         self.btc_dominance_widget_hlayout.setObjectName("btc_dominance_widget_hlayout")
         self.btc_dominance_widget_vlayout = QtWidgets.QVBoxLayout()
         self.btc_dominance_widget_vlayout.setContentsMargins(0, 0, 0, 0)
@@ -182,14 +186,14 @@ class Ui_Form(object):
         self.btc_dominance_widget_value.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 24px;")
+"font-size: " + str(int(24 * self.ratio)) + "px;")
         self.btc_dominance_widget_value.setObjectName("btc_dominance_widget_value")
         self.btc_dominance_widget_vlayout.addWidget(self.btc_dominance_widget_value)
         self.btc_dominance_widget_label = QtWidgets.QLabel(self.horizontalLayoutWidget_4)
         self.btc_dominance_widget_label.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: #808080;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 18px;")
+"font-size: " + str(int(18 * self.ratio)) + "px;")
         self.btc_dominance_widget_label.setObjectName("btc_dominance_widget_label")
         self.btc_dominance_widget_vlayout.addWidget(self.btc_dominance_widget_label)
         self.btc_dominance_widget_vlayout.setStretch(0, 2)
@@ -197,16 +201,16 @@ class Ui_Form(object):
         self.btc_dominance_widget_hlayout.addLayout(self.btc_dominance_widget_vlayout)
         self.global_widgets_layout.addWidget(self.btc_dominance_widget)
         self.number_of_coins_widget = QtWidgets.QWidget(self.layoutWidget1)
-        self.number_of_coins_widget.setMaximumSize(QtCore.QSize(16777215, 90))
+        self.number_of_coins_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.number_of_coins_widget.setStyleSheet("background: #232323;\n"
 "border-radius: 25%;\n"
 "")
         self.number_of_coins_widget.setObjectName("number_of_coins_widget")
         self.horizontalLayoutWidget_5 = QtWidgets.QWidget(self.number_of_coins_widget)
-        self.horizontalLayoutWidget_5.setGeometry(QtCore.QRect(0, 0, 281, 91))
+        self.horizontalLayoutWidget_5.setGeometry(QtCore.QRect(0, 0, int(281 * self.ratio), int(91 * self.ratio)))
         self.horizontalLayoutWidget_5.setObjectName("horizontalLayoutWidget_5")
         self.number_of_coins_widget_hlayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_5)
-        self.number_of_coins_widget_hlayout.setContentsMargins(25, 20, 25, 20)
+        self.number_of_coins_widget_hlayout.setContentsMargins(int(25 * self.ratio), int(20 * self.ratio), int(25 * self.ratio), int(20 * self.ratio))
         self.number_of_coins_widget_hlayout.setObjectName("number_of_coins_widget_hlayout")
         self.number_of_coins_widget_vlayout = QtWidgets.QVBoxLayout()
         self.number_of_coins_widget_vlayout.setObjectName("number_of_coins_widget_vlayout")
@@ -214,21 +218,21 @@ class Ui_Form(object):
         self.number_of_coins_widget_value.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 24px;")
+"font-size: " + str(int(24 * self.ratio)) + "px;")
         self.number_of_coins_widget_value.setObjectName("number_of_coins_widget_value")
         self.number_of_coins_widget_vlayout.addWidget(self.number_of_coins_widget_value)
         self.number_of_coins_widget_label = QtWidgets.QLabel(self.horizontalLayoutWidget_5)
         self.number_of_coins_widget_label.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: #808080;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 18px;")
+"font-size: " + str(int(18 * self.ratio)) + "px;")
         self.number_of_coins_widget_label.setObjectName("number_of_coins_widget_label")
         self.number_of_coins_widget_vlayout.addWidget(self.number_of_coins_widget_label)
         self.number_of_coins_widget_vlayout.setStretch(0, 2)
         self.number_of_coins_widget_vlayout.setStretch(1, 1)
         self.number_of_coins_widget_hlayout.addLayout(self.number_of_coins_widget_vlayout)
         self.global_widgets_layout.addWidget(self.number_of_coins_widget)
-        spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem2 = QtWidgets.QSpacerItem(int(40 * self.ratio), int(20 * self.ratio), QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.global_widgets_layout.addItem(spacerItem2)
         self.global_widgets_layout.setStretch(0, 1)
         self.global_widgets_layout.setStretch(1, 1)
@@ -271,12 +275,12 @@ class Ui_Form(object):
         self.master_table_widget.setHorizontalHeaderItem(6, item)
         item = QtWidgets.QTableWidgetItem()
         self.master_table_widget.setHorizontalHeaderItem(7, item)
-        self.master_table_widget.horizontalHeader().setDefaultSectionSize(200)
+        self.master_table_widget.horizontalHeader().setDefaultSectionSize(int(200 * self.ratio))
         self.master_table_widget.horizontalHeader().setHighlightSections(True)
-        self.master_table_widget.horizontalHeader().setMinimumSectionSize(200)
+        self.master_table_widget.horizontalHeader().setMinimumSectionSize(int(200 * self.ratio))
         self.master_table_widget.horizontalHeader().setStretchLastSection(True)
         self.master_table_widget.verticalHeader().setVisible(False)
-        self.master_table_widget.verticalHeader().setMinimumSectionSize(30)
+        self.master_table_widget.verticalHeader().setMinimumSectionSize(int(30 * self.ratio))
         self.master_table_widget.verticalHeader().setSortIndicatorShown(False)
         self.master_table_widget.verticalHeader().setStretchLastSection(False)
         self.master_layout.addWidget(self.master_table_widget)
@@ -286,30 +290,30 @@ class Ui_Form(object):
         self.details_widget = QtWidgets.QWidget()
         self.details_widget.setObjectName("details_widget")
         self.layoutWidget2 = QtWidgets.QWidget(self.details_widget)
-        self.layoutWidget2.setGeometry(QtCore.QRect(20, 10, 1821, 901))
+        self.layoutWidget2.setGeometry(QtCore.QRect(int(20 * self.ratio), int(10 * self.ratio), int(1821 * self.ratio), int(901 * self.ratio)))
         self.layoutWidget2.setObjectName("layoutWidget2")
         self.details_layout = QtWidgets.QVBoxLayout(self.layoutWidget2)
         self.details_layout.setContentsMargins(0, 0, 0, 0)
-        self.details_layout.setSpacing(18)
+        self.details_layout.setSpacing(int(9 * self.ratio))
         self.details_layout.setObjectName("details_layout")
         self.rank_label = QtWidgets.QLabel(self.layoutWidget2)
-        self.rank_label.setMinimumSize(QtCore.QSize(70, 30))
-        self.rank_label.setMaximumSize(QtCore.QSize(70, 30))
+        self.rank_label.setMinimumSize(QtCore.QSize(int(70 * self.ratio), int(30 * self.ratio)))
+        self.rank_label.setMaximumSize(QtCore.QSize(int(70 * self.ratio), int(30 * self.ratio)))
         self.rank_label.setStyleSheet("background: #232323;\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 14px;\n"
+"font-size: " + str(int(14 * self.ratio)) + "px;\n"
 "border-radius: 10%;\n"
 "font-weight: 500;")
         self.rank_label.setAlignment(QtCore.Qt.AlignCenter)
         self.rank_label.setObjectName("rank_label")
         self.details_layout.addWidget(self.rank_label)
         self.details_coin_id_layout = QtWidgets.QHBoxLayout()
-        self.details_coin_id_layout.setSpacing(8)
+        self.details_coin_id_layout.setSpacing(int(8 * self.ratio))
         self.details_coin_id_layout.setObjectName("details_coin_id_layout")
         self.details_coin_logo_label = QtWidgets.QLabel(self.layoutWidget2)
-        self.details_coin_logo_label.setMinimumSize(QtCore.QSize(50, 50))
-        self.details_coin_logo_label.setMaximumSize(QtCore.QSize(50, 50))
+        self.details_coin_logo_label.setMinimumSize(QtCore.QSize(int(50 * self.ratio), int(50 * self.ratio)))
+        self.details_coin_logo_label.setMaximumSize(QtCore.QSize(int(50 * self.ratio), int(50 * self.ratio)))
         self.details_coin_logo_label.setStyleSheet("border-image: url(./resources/logo.png);\n"
 "border-radius: 50%;\n"
 "background: rgba(0, 0, 0, 0);")
@@ -320,7 +324,7 @@ class Ui_Form(object):
         self.details_coin_name_label.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 24px;\n"
+"font-size: " + str(int(24 * self.ratio)) + "px;\n"
 "font-weight: bold;")
         self.details_coin_name_label.setObjectName("details_coin_name_label")
         self.details_coin_id_layout.addWidget(self.details_coin_name_label)
@@ -328,37 +332,37 @@ class Ui_Form(object):
         self.details_coin_symbol_label.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: #808080;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 20px;\n"
+"font-size: " + str(int(20 * self.ratio)) + "px;\n"
 "font-weight: 350;")
         self.details_coin_symbol_label.setObjectName("details_coin_symbol_label")
         self.details_coin_id_layout.addWidget(self.details_coin_symbol_label)
         self.pushButton = QtWidgets.QPushButton(self.layoutWidget2)
-        self.pushButton.setMinimumSize(QtCore.QSize(30, 30))
-        self.pushButton.setMaximumSize(QtCore.QSize(30, 30))
+        self.pushButton.setMinimumSize(QtCore.QSize(int(30 * self.ratio), int(30 * self.ratio)))
+        self.pushButton.setMaximumSize(QtCore.QSize(int(30 * self.ratio), int(30 * self.ratio)))
         self.pushButton.setStyleSheet("border-image: url(./star/star_empty.png);\n"
 "background: rgba(0, 0, 0, 0);")
         self.pushButton.setText("")
         self.pushButton.setObjectName("pushButton")
         self.details_coin_id_layout.addWidget(self.pushButton)
         self.pushButton_2 = QtWidgets.QPushButton(self.layoutWidget2)
-        self.pushButton_2.setMinimumSize(QtCore.QSize(25, 25))
-        self.pushButton_2.setMaximumSize(QtCore.QSize(25, 25))
+        self.pushButton_2.setMinimumSize(QtCore.QSize(int(25 * self.ratio), int(25 * self.ratio)))
+        self.pushButton_2.setMaximumSize(QtCore.QSize(int(25 * self.ratio), int(25 * self.ratio)))
         self.pushButton_2.setStyleSheet("border-image: url(./plus/plus_fill.png);\n"
 "background: rgba(0, 0, 0, 0);")
         self.pushButton_2.setText("")
         self.pushButton_2.setObjectName("pushButton_2")
         self.details_coin_id_layout.addWidget(self.pushButton_2)
-        spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem3 = QtWidgets.QSpacerItem(int(40 * self.ratio), int(20 * self.ratio), QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.details_coin_id_layout.addItem(spacerItem3)
         self.details_layout.addLayout(self.details_coin_id_layout)
         self.details_coin_price_layout = QtWidgets.QHBoxLayout()
-        self.details_coin_price_layout.setSpacing(8)
+        self.details_coin_price_layout.setSpacing(int(8 * self.ratio))
         self.details_coin_price_layout.setObjectName("details_coin_price_layout")
         self.details_coin_price_label = QtWidgets.QLabel(self.layoutWidget2)
         self.details_coin_price_label.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 32px;\n"
+"font-size: " + str(int(32 * self.ratio)) + "px;\n"
 "font-weight: bold;")
         self.details_coin_price_label.setObjectName("details_coin_price_label")
         self.details_coin_price_layout.addWidget(self.details_coin_price_label)
@@ -366,27 +370,27 @@ class Ui_Form(object):
         self.details_coin_change_label.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: lime;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 20px;\n"
+"font-size: " + str(int(20 * self.ratio)) + "px;\n"
 "font-weight: bold;")
         self.details_coin_change_label.setObjectName("details_coin_change_label")
         self.details_coin_price_layout.addWidget(self.details_coin_change_label)
-        spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem4 = QtWidgets.QSpacerItem(int(40 * self.ratio), int(20 * self.ratio), QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.details_coin_price_layout.addItem(spacerItem4)
         self.details_layout.addLayout(self.details_coin_price_layout)
         self.details_coin_widgets_layout = QtWidgets.QHBoxLayout()
-        self.details_coin_widgets_layout.setSpacing(20)
+        self.details_coin_widgets_layout.setSpacing(int(20 * self.ratio))
         self.details_coin_widgets_layout.setObjectName("details_coin_widgets_layout")
         self.details_market_cap_widget = QtWidgets.QWidget(self.layoutWidget2)
-        self.details_market_cap_widget.setMaximumSize(QtCore.QSize(16777215, 90))
+        self.details_market_cap_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.details_market_cap_widget.setStyleSheet("background: #232323;\n"
 "border-radius: 25%;\n"
 "")
         self.details_market_cap_widget.setObjectName("details_market_cap_widget")
         self.horizontalLayoutWidget_10 = QtWidgets.QWidget(self.details_market_cap_widget)
-        self.horizontalLayoutWidget_10.setGeometry(QtCore.QRect(0, 0, 291, 91))
+        self.horizontalLayoutWidget_10.setGeometry(QtCore.QRect(0, 0, 291, int(91 * self.ratio)))
         self.horizontalLayoutWidget_10.setObjectName("horizontalLayoutWidget_10")
         self.details_market_cap_widget_hlayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_10)
-        self.details_market_cap_widget_hlayout.setContentsMargins(25, 20, 25, 20)
+        self.details_market_cap_widget_hlayout.setContentsMargins(int(25 * self.ratio), int(20 * self.ratio), int(25 * self.ratio), int(20 * self.ratio))
         self.details_market_cap_widget_hlayout.setObjectName("details_market_cap_widget_hlayout")
         self.details_market_cap_widget_vlayout = QtWidgets.QVBoxLayout()
         self.details_market_cap_widget_vlayout.setObjectName("details_market_cap_widget_vlayout")
@@ -394,30 +398,30 @@ class Ui_Form(object):
         self.details_market_cap_widget_value.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 24px;")
+"font-size: " + str(int(24 * self.ratio)) + "px;")
         self.details_market_cap_widget_value.setObjectName("details_market_cap_widget_value")
         self.details_market_cap_widget_vlayout.addWidget(self.details_market_cap_widget_value)
         self.details_market_cap_widget_label = QtWidgets.QLabel(self.horizontalLayoutWidget_10)
         self.details_market_cap_widget_label.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: #808080;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 18px;")
+"font-size: " + str(int(18 * self.ratio)) + "px;")
         self.details_market_cap_widget_label.setObjectName("details_market_cap_widget_label")
         self.details_market_cap_widget_vlayout.addWidget(self.details_market_cap_widget_label)
         self.details_market_cap_widget_vlayout.setStretch(1, 1)
         self.details_market_cap_widget_hlayout.addLayout(self.details_market_cap_widget_vlayout)
         self.details_coin_widgets_layout.addWidget(self.details_market_cap_widget)
         self.details_trading_volume_widget = QtWidgets.QWidget(self.layoutWidget2)
-        self.details_trading_volume_widget.setMaximumSize(QtCore.QSize(16777215, 90))
+        self.details_trading_volume_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.details_trading_volume_widget.setStyleSheet("background: #232323;\n"
 "border-radius: 25%;\n"
 "")
         self.details_trading_volume_widget.setObjectName("details_trading_volume_widget")
         self.horizontalLayoutWidget_11 = QtWidgets.QWidget(self.details_trading_volume_widget)
-        self.horizontalLayoutWidget_11.setGeometry(QtCore.QRect(0, 0, 291, 91))
+        self.horizontalLayoutWidget_11.setGeometry(QtCore.QRect(0, 0, int(291 * self.ratio), int(91 * self.ratio)))
         self.horizontalLayoutWidget_11.setObjectName("horizontalLayoutWidget_11")
         self.details_trading_volume_widget_hlayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_11)
-        self.details_trading_volume_widget_hlayout.setContentsMargins(25, 20, 25, 20)
+        self.details_trading_volume_widget_hlayout.setContentsMargins(int(25 * self.ratio), int(20 * self.ratio), int(25 * self.ratio), int(20 * self.ratio))
         self.details_trading_volume_widget_hlayout.setObjectName("details_trading_volume_widget_hlayout")
         self.details_trading_volume_widget_vlayout = QtWidgets.QVBoxLayout()
         self.details_trading_volume_widget_vlayout.setObjectName("details_trading_volume_widget_vlayout")
@@ -425,30 +429,30 @@ class Ui_Form(object):
         self.details_trading_volume_widget_value.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 24px;")
+"font-size: " + str(int(24 * self.ratio)) + "px;")
         self.details_trading_volume_widget_value.setObjectName("details_trading_volume_widget_value")
         self.details_trading_volume_widget_vlayout.addWidget(self.details_trading_volume_widget_value)
         self.details_trading_volume_widget_label = QtWidgets.QLabel(self.horizontalLayoutWidget_11)
         self.details_trading_volume_widget_label.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: #808080;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 18px;")
+"font-size: " + str(int(18 * self.ratio)) + "px;")
         self.details_trading_volume_widget_label.setObjectName("details_trading_volume_widget_label")
         self.details_trading_volume_widget_vlayout.addWidget(self.details_trading_volume_widget_label)
         self.details_trading_volume_widget_vlayout.setStretch(0, 2)
         self.details_trading_volume_widget_hlayout.addLayout(self.details_trading_volume_widget_vlayout)
         self.details_coin_widgets_layout.addWidget(self.details_trading_volume_widget)
         self.details_circulating_supply_widget = QtWidgets.QWidget(self.layoutWidget2)
-        self.details_circulating_supply_widget.setMaximumSize(QtCore.QSize(16777215, 90))
+        self.details_circulating_supply_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.details_circulating_supply_widget.setStyleSheet("background: #232323;\n"
 "border-radius: 25%;\n"
 "")
         self.details_circulating_supply_widget.setObjectName("details_circulating_supply_widget")
         self.horizontalLayoutWidget_12 = QtWidgets.QWidget(self.details_circulating_supply_widget)
-        self.horizontalLayoutWidget_12.setGeometry(QtCore.QRect(0, 0, 291, 91))
+        self.horizontalLayoutWidget_12.setGeometry(QtCore.QRect(0, 0, int(291 * self.ratio), int(91 * self.ratio)))
         self.horizontalLayoutWidget_12.setObjectName("horizontalLayoutWidget_12")
         self.details_circulating_supply_widget_hlayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_12)
-        self.details_circulating_supply_widget_hlayout.setContentsMargins(25, 20, 25, 20)
+        self.details_circulating_supply_widget_hlayout.setContentsMargins(int(25 * self.ratio), int(20 * self.ratio), int(25 * self.ratio), int(20 * self.ratio))
         self.details_circulating_supply_widget_hlayout.setObjectName("details_circulating_supply_widget_hlayout")
         self.details_circulating_supply_widget_vlayout = QtWidgets.QVBoxLayout()
         self.details_circulating_supply_widget_vlayout.setContentsMargins(0, 0, 0, 0)
@@ -457,14 +461,14 @@ class Ui_Form(object):
         self.details_circulating_supply_widget_value.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 24px;")
+"font-size: " + str(int(24 * self.ratio)) + "px;")
         self.details_circulating_supply_widget_value.setObjectName("details_circulating_supply_widget_value")
         self.details_circulating_supply_widget_vlayout.addWidget(self.details_circulating_supply_widget_value)
         self.details_circulating_supply_widget_label = QtWidgets.QLabel(self.horizontalLayoutWidget_12)
         self.details_circulating_supply_widget_label.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: #808080;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 18px;")
+"font-size: " + str(int(18 * self.ratio)) + "px;")
         self.details_circulating_supply_widget_label.setObjectName("details_circulating_supply_widget_label")
         self.details_circulating_supply_widget_vlayout.addWidget(self.details_circulating_supply_widget_label)
         self.details_circulating_supply_widget_vlayout.setStretch(0, 2)
@@ -472,16 +476,16 @@ class Ui_Form(object):
         self.details_circulating_supply_widget_hlayout.addLayout(self.details_circulating_supply_widget_vlayout)
         self.details_coin_widgets_layout.addWidget(self.details_circulating_supply_widget)
         self.details_all_time_high_widget = QtWidgets.QWidget(self.layoutWidget2)
-        self.details_all_time_high_widget.setMaximumSize(QtCore.QSize(16777215, 90))
+        self.details_all_time_high_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.details_all_time_high_widget.setStyleSheet("background: #232323;\n"
 "border-radius: 25%;\n"
 "")
         self.details_all_time_high_widget.setObjectName("details_all_time_high_widget")
         self.horizontalLayoutWidget_13 = QtWidgets.QWidget(self.details_all_time_high_widget)
-        self.horizontalLayoutWidget_13.setGeometry(QtCore.QRect(0, 0, 291, 91))
+        self.horizontalLayoutWidget_13.setGeometry(QtCore.QRect(0, 0, int(291 * self.ratio), int(91 * self.ratio)))
         self.horizontalLayoutWidget_13.setObjectName("horizontalLayoutWidget_13")
         self.details_all_time_high_widget_hlayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_13)
-        self.details_all_time_high_widget_hlayout.setContentsMargins(25, 20, 25, 20)
+        self.details_all_time_high_widget_hlayout.setContentsMargins(int(25 * self.ratio), int(20 * self.ratio), int(25 * self.ratio), int(20 * self.ratio))
         self.details_all_time_high_widget_hlayout.setObjectName("details_all_time_high_widget_hlayout")
         self.details_all_time_high_widget_vlayout = QtWidgets.QVBoxLayout()
         self.details_all_time_high_widget_vlayout.setObjectName("details_all_time_high_widget_vlayout")
@@ -489,14 +493,14 @@ class Ui_Form(object):
         self.details_all_time_high_widget_value.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 24px;")
+"font-size: " + str(int(24 * self.ratio)) + "px;")
         self.details_all_time_high_widget_value.setObjectName("details_all_time_high_widget_value")
         self.details_all_time_high_widget_vlayout.addWidget(self.details_all_time_high_widget_value)
         self.details_all_time_high_widget_label = QtWidgets.QLabel(self.horizontalLayoutWidget_13)
         self.details_all_time_high_widget_label.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: #808080;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 18px;")
+"font-size: " + str(int(18 * self.ratio)) + "px;")
         self.details_all_time_high_widget_label.setObjectName("details_all_time_high_widget_label")
         self.details_all_time_high_widget_vlayout.addWidget(self.details_all_time_high_widget_label)
         self.details_all_time_high_widget_vlayout.setStretch(0, 2)
@@ -504,16 +508,16 @@ class Ui_Form(object):
         self.details_all_time_high_widget_hlayout.addLayout(self.details_all_time_high_widget_vlayout)
         self.details_coin_widgets_layout.addWidget(self.details_all_time_high_widget)
         self.details_all_time_low_widget = QtWidgets.QWidget(self.layoutWidget2)
-        self.details_all_time_low_widget.setMaximumSize(QtCore.QSize(16777215, 90))
+        self.details_all_time_low_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.details_all_time_low_widget.setStyleSheet("background: #232323;\n"
 "border-radius: 25%;\n"
 "")
         self.details_all_time_low_widget.setObjectName("details_all_time_low_widget")
         self.horizontalLayoutWidget_14 = QtWidgets.QWidget(self.details_all_time_low_widget)
-        self.horizontalLayoutWidget_14.setGeometry(QtCore.QRect(0, 0, 291, 91))
+        self.horizontalLayoutWidget_14.setGeometry(QtCore.QRect(0, 0, int(291 * self.ratio), int(91 * self.ratio)))
         self.horizontalLayoutWidget_14.setObjectName("horizontalLayoutWidget_14")
         self.details_all_time_low_widget_hlayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_14)
-        self.details_all_time_low_widget_hlayout.setContentsMargins(25, 20, 25, 20)
+        self.details_all_time_low_widget_hlayout.setContentsMargins(int(25 * self.ratio), int(20 * self.ratio), int(25 * self.ratio), int(20 * self.ratio))
         self.details_all_time_low_widget_hlayout.setObjectName("details_all_time_low_widget_hlayout")
         self.details_all_time_low_widget_vlayout = QtWidgets.QVBoxLayout()
         self.details_all_time_low_widget_vlayout.setObjectName("details_all_time_low_widget_vlayout")
@@ -521,20 +525,20 @@ class Ui_Form(object):
         self.details_all_time_low_widget_value.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 24px;")
+"font-size: " + str(int(24 * self.ratio)) + "px;")
         self.details_all_time_low_widget_value.setObjectName("details_all_time_low_widget_value")
         self.details_all_time_low_widget_vlayout.addWidget(self.details_all_time_low_widget_value)
         self.details_all_time_low_widget_label = QtWidgets.QLabel(self.horizontalLayoutWidget_14)
         self.details_all_time_low_widget_label.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: #808080;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 18px;")
+"font-size: " + str(int(18 * self.ratio)) + "px;")
         self.details_all_time_low_widget_label.setObjectName("details_all_time_low_widget_label")
         self.details_all_time_low_widget_vlayout.addWidget(self.details_all_time_low_widget_label)
         self.details_all_time_low_widget_vlayout.setStretch(0, 2)
         self.details_all_time_low_widget_hlayout.addLayout(self.details_all_time_low_widget_vlayout)
         self.details_coin_widgets_layout.addWidget(self.details_all_time_low_widget)
-        spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem5 = QtWidgets.QSpacerItem(int(40 * self.ratio), int(20 * self.ratio), QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.details_coin_widgets_layout.addItem(spacerItem5)
         self.details_coin_widgets_layout.setStretch(0, 20)
         self.details_coin_widgets_layout.setStretch(1, 20)
@@ -544,13 +548,13 @@ class Ui_Form(object):
         self.details_coin_widgets_layout.setStretch(5, 18)
         self.details_layout.addLayout(self.details_coin_widgets_layout)
         self.matplotlib_widget = QtWidgets.QWidget(self.layoutWidget2)
-        self.matplotlib_widget.setMinimumSize(QtCore.QSize(0, 500))
+        self.matplotlib_widget.setMinimumSize(QtCore.QSize(0, int(500)))
         self.matplotlib_widget.setStyleSheet("background: rgb(85, 0, 0)")
         self.matplotlib_widget.setObjectName("matplotlib_widget")
         self.details_layout.addWidget(self.matplotlib_widget)
         self.time_change_table = QtWidgets.QTableWidget(self.layoutWidget2)
-        self.time_change_table.setMinimumSize(QtCore.QSize(900, 64))
-        self.time_change_table.setMaximumSize(QtCore.QSize(16777215, 64))
+        self.time_change_table.setMinimumSize(QtCore.QSize(int(900 * self.ratio), int(64 * self.ratio)))
+        self.time_change_table.setMaximumSize(QtCore.QSize(16777215, int(64 * self.ratio)))
         self.time_change_table.viewport().setProperty("cursor", QtGui.QCursor(QtCore.Qt.ArrowCursor))
         self.time_change_table.setStyleSheet("QHeaderView::section {\n"
 "    background-color:  #232323;\n"
@@ -583,25 +587,25 @@ class Ui_Form(object):
         self.time_change_table.setHorizontalHeaderItem(4, item)
         item = QtWidgets.QTableWidgetItem()
         self.time_change_table.setHorizontalHeaderItem(5, item)
-        self.time_change_table.horizontalHeader().setDefaultSectionSize(150)
-        self.time_change_table.horizontalHeader().setMinimumSectionSize(150)
+        self.time_change_table.horizontalHeader().setDefaultSectionSize(int(150 * self.ratio))
+        self.time_change_table.horizontalHeader().setMinimumSectionSize(int(150 * self.ratio))
         self.time_change_table.verticalHeader().setVisible(False)
         self.details_layout.addWidget(self.time_change_table, 0, QtCore.Qt.AlignHCenter)
-        spacerItem6 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem6 = QtWidgets.QSpacerItem(int(20 * self.ratio), int(20 * self.ratio), QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.details_layout.addItem(spacerItem6)
         self.details_layout.setStretch(3, 1)
         self.stackedWidget.addWidget(self.details_widget)
         self.favourites_widget = QtWidgets.QWidget()
         self.favourites_widget.setObjectName("favourites_widget")
         self.layoutWidget_2 = QtWidgets.QWidget(self.favourites_widget)
-        self.layoutWidget_2.setGeometry(QtCore.QRect(20, 10, 1821, 901))
+        self.layoutWidget_2.setGeometry(QtCore.QRect(int(20 * self.ratio), int(10 * self.ratio), int(1821 * self.ratio), int(901 * self.ratio)))
         self.layoutWidget_2.setObjectName("layoutWidget_2")
         self.favourites_layout = QtWidgets.QVBoxLayout(self.layoutWidget_2)
         self.favourites_layout.setContentsMargins(0, 0, 0, 0)
-        self.favourites_layout.setSpacing(20)
+        self.favourites_layout.setSpacing(int(20))
         self.favourites_layout.setObjectName("favourites_layout")
         self.favourites_number_of_favourite_coins_layout = QtWidgets.QHBoxLayout()
-        self.favourites_number_of_favourite_coins_layout.setSpacing(6)
+        self.favourites_number_of_favourite_coins_layout.setSpacing(int(6 * self.ratio))
         self.favourites_number_of_favourite_coins_layout.setObjectName("favourites_number_of_favourite_coins_layout")
         self.favourites_number_of_favourite_coins_label = QtWidgets.QLabel(self.layoutWidget_2)
         self.favourites_number_of_favourite_coins_label.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
@@ -617,7 +621,7 @@ class Ui_Form(object):
 "font-size:20px;")
         self.favourites_number_of_favourite_coins_value.setObjectName("favourites_number_of_favourite_coins_value")
         self.favourites_number_of_favourite_coins_layout.addWidget(self.favourites_number_of_favourite_coins_value)
-        spacerItem7 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem7 = QtWidgets.QSpacerItem(int(40 * self.ratio), int(20 * self.ratio), QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.favourites_number_of_favourite_coins_layout.addItem(spacerItem7)
         self.favourites_layout.addLayout(self.favourites_number_of_favourite_coins_layout)
         self.favourites_table = QtWidgets.QTableWidget(self.layoutWidget_2)
@@ -655,12 +659,12 @@ class Ui_Form(object):
         self.favourites_table.setHorizontalHeaderItem(6, item)
         item = QtWidgets.QTableWidgetItem()
         self.favourites_table.setHorizontalHeaderItem(7, item)
-        self.favourites_table.horizontalHeader().setDefaultSectionSize(200)
+        self.favourites_table.horizontalHeader().setDefaultSectionSize(int(200 * self.ratio))
         self.favourites_table.horizontalHeader().setHighlightSections(True)
-        self.favourites_table.horizontalHeader().setMinimumSectionSize(200)
+        self.favourites_table.horizontalHeader().setMinimumSectionSize(int(200 * self.ratio))
         self.favourites_table.horizontalHeader().setStretchLastSection(True)
         self.favourites_table.verticalHeader().setVisible(False)
-        self.favourites_table.verticalHeader().setMinimumSectionSize(30)
+        self.favourites_table.verticalHeader().setMinimumSectionSize(int(30 * self.ratio))
         self.favourites_table.verticalHeader().setSortIndicatorShown(False)
         self.favourites_table.verticalHeader().setStretchLastSection(False)
         self.favourites_layout.addWidget(self.favourites_table)
@@ -669,26 +673,26 @@ class Ui_Form(object):
         self.portfolio_widget = QtWidgets.QWidget()
         self.portfolio_widget.setObjectName("portfolio_widget")
         self.layoutWidget_3 = QtWidgets.QWidget(self.portfolio_widget)
-        self.layoutWidget_3.setGeometry(QtCore.QRect(20, 10, 1821, 901))
+        self.layoutWidget_3.setGeometry(QtCore.QRect(int(20 * self.ratio), int(10 * self.ratio), int(1821 * self.ratio), int(901 * self.ratio)))
         self.layoutWidget_3.setObjectName("layoutWidget_3")
         self.portfolio_layout = QtWidgets.QVBoxLayout(self.layoutWidget_3)
         self.portfolio_layout.setContentsMargins(0, 0, 0, 0)
-        self.portfolio_layout.setSpacing(20)
+        self.portfolio_layout.setSpacing(int(20 * self.ratio))
         self.portfolio_layout.setObjectName("portfolio_layout")
         self.portfolio_global_widget_layout = QtWidgets.QHBoxLayout()
-        self.portfolio_global_widget_layout.setSpacing(20)
+        self.portfolio_global_widget_layout.setSpacing(int(20 * self.ratio))
         self.portfolio_global_widget_layout.setObjectName("portfolio_global_widget_layout")
         self.portfolio_total_balance_widget = QtWidgets.QWidget(self.layoutWidget_3)
-        self.portfolio_total_balance_widget.setMaximumSize(QtCore.QSize(16777215, 90))
+        self.portfolio_total_balance_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.portfolio_total_balance_widget.setStyleSheet("background: #232323;\n"
 "border-radius: 25%;\n"
 "")
         self.portfolio_total_balance_widget.setObjectName("portfolio_total_balance_widget")
         self.horizontalLayoutWidget_6 = QtWidgets.QWidget(self.portfolio_total_balance_widget)
-        self.horizontalLayoutWidget_6.setGeometry(QtCore.QRect(0, 0, 281, 91))
+        self.horizontalLayoutWidget_6.setGeometry(QtCore.QRect(0, 0, int(281 * self.ratio), int(91 * self.ratio)))
         self.horizontalLayoutWidget_6.setObjectName("horizontalLayoutWidget_6")
         self.portfolio_total_balance_widget_hlayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_6)
-        self.portfolio_total_balance_widget_hlayout.setContentsMargins(25, 20, 25, 20)
+        self.portfolio_total_balance_widget_hlayout.setContentsMargins(int(25 * self.ratio), int(20 * self.ratio), int(25 * self.ratio), int(20 * self.ratio))
         self.portfolio_total_balance_widget_hlayout.setObjectName("portfolio_total_balance_widget_hlayout")
         self.portfolio_total_balance_widget_vlayout = QtWidgets.QVBoxLayout()
         self.portfolio_total_balance_widget_vlayout.setObjectName("portfolio_total_balance_widget_vlayout")
@@ -696,30 +700,30 @@ class Ui_Form(object):
         self.portfolio_total_balance_widget_value.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 24px;")
+"font-size: " + str(int(24 * self.ratio)) + "px;")
         self.portfolio_total_balance_widget_value.setObjectName("portfolio_total_balance_widget_value")
         self.portfolio_total_balance_widget_vlayout.addWidget(self.portfolio_total_balance_widget_value)
         self.portfolio_total_balance_widget_label = QtWidgets.QLabel(self.horizontalLayoutWidget_6)
         self.portfolio_total_balance_widget_label.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: #808080;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 18px;")
+"font-size: " + str(int(18 * self.ratio)) + "px;")
         self.portfolio_total_balance_widget_label.setObjectName("portfolio_total_balance_widget_label")
         self.portfolio_total_balance_widget_vlayout.addWidget(self.portfolio_total_balance_widget_label)
         self.portfolio_total_balance_widget_vlayout.setStretch(1, 1)
         self.portfolio_total_balance_widget_hlayout.addLayout(self.portfolio_total_balance_widget_vlayout)
         self.portfolio_global_widget_layout.addWidget(self.portfolio_total_balance_widget)
         self.portfolio_change_widget = QtWidgets.QWidget(self.layoutWidget_3)
-        self.portfolio_change_widget.setMaximumSize(QtCore.QSize(16777215, 90))
+        self.portfolio_change_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.portfolio_change_widget.setStyleSheet("background: #232323;\n"
 "border-radius: 25%;\n"
 "")
         self.portfolio_change_widget.setObjectName("portfolio_change_widget")
         self.horizontalLayoutWidget_7 = QtWidgets.QWidget(self.portfolio_change_widget)
-        self.horizontalLayoutWidget_7.setGeometry(QtCore.QRect(0, 0, 281, 91))
+        self.horizontalLayoutWidget_7.setGeometry(QtCore.QRect(0, 0, int(281 * self.ratio), int(91 * self.ratio)))
         self.horizontalLayoutWidget_7.setObjectName("horizontalLayoutWidget_7")
         self.portfolio_change_widget_hlayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_7)
-        self.portfolio_change_widget_hlayout.setContentsMargins(25, 20, 25, 20)
+        self.portfolio_change_widget_hlayout.setContentsMargins(int(25 * self.ratio), int(20 * self.ratio), int(25 * self.ratio), int(20 * self.ratio))
         self.portfolio_change_widget_hlayout.setObjectName("portfolio_change_widget_hlayout")
         self.portfolio_change_widget_vlayout = QtWidgets.QVBoxLayout()
         self.portfolio_change_widget_vlayout.setObjectName("portfolio_change_widget_vlayout")
@@ -727,30 +731,30 @@ class Ui_Form(object):
         self.portfolio_change_widget_value.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 24px;")
+"font-size: " + str(int(24 * self.ratio)) + "px;")
         self.portfolio_change_widget_value.setObjectName("portfolio_change_widget_value")
         self.portfolio_change_widget_vlayout.addWidget(self.portfolio_change_widget_value)
         self.portfolio_change_widget_label = QtWidgets.QLabel(self.horizontalLayoutWidget_7)
         self.portfolio_change_widget_label.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: #808080;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 18px;")
+"font-size: " + str(int(18 * self.ratio)) + "px;")
         self.portfolio_change_widget_label.setObjectName("portfolio_change_widget_label")
         self.portfolio_change_widget_vlayout.addWidget(self.portfolio_change_widget_label)
         self.portfolio_change_widget_vlayout.setStretch(0, 2)
         self.portfolio_change_widget_hlayout.addLayout(self.portfolio_change_widget_vlayout)
         self.portfolio_global_widget_layout.addWidget(self.portfolio_change_widget)
         self.total_profit_widget = QtWidgets.QWidget(self.layoutWidget_3)
-        self.total_profit_widget.setMaximumSize(QtCore.QSize(16777215, 90))
+        self.total_profit_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.total_profit_widget.setStyleSheet("background: #232323;\n"
 "border-radius: 25%;\n"
 "")
         self.total_profit_widget.setObjectName("total_profit_widget")
         self.horizontalLayoutWidget_8 = QtWidgets.QWidget(self.total_profit_widget)
-        self.horizontalLayoutWidget_8.setGeometry(QtCore.QRect(0, 0, 281, 91))
+        self.horizontalLayoutWidget_8.setGeometry(QtCore.QRect(0, 0, int(281 * self.ratio), int(91 * self.ratio)))
         self.horizontalLayoutWidget_8.setObjectName("horizontalLayoutWidget_8")
         self.total_profit_widget_hlayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_8)
-        self.total_profit_widget_hlayout.setContentsMargins(25, 20, 25, 20)
+        self.total_profit_widget_hlayout.setContentsMargins(int(25 * self.ratio), int(20 * self.ratio), int(25 * self.ratio), int(20 * self.ratio))
         self.total_profit_widget_hlayout.setObjectName("total_profit_widget_hlayout")
         self.total_profit_widget_vlayout = QtWidgets.QVBoxLayout()
         self.total_profit_widget_vlayout.setContentsMargins(0, 0, 0, 0)
@@ -759,14 +763,14 @@ class Ui_Form(object):
         self.total_profit_widget_value.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 24px;")
+"font-size: " + str(int(24 * self.ratio)) + "px;")
         self.total_profit_widget_value.setObjectName("total_profit_widget_value")
         self.total_profit_widget_vlayout.addWidget(self.total_profit_widget_value)
         self.total_profit_widget_label = QtWidgets.QLabel(self.horizontalLayoutWidget_8)
         self.total_profit_widget_label.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: #808080;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 18px;")
+"font-size: " + str(int(18 * self.ratio)) + "px;")
         self.total_profit_widget_label.setObjectName("total_profit_widget_label")
         self.total_profit_widget_vlayout.addWidget(self.total_profit_widget_label)
         self.total_profit_widget_vlayout.setStretch(0, 2)
@@ -774,16 +778,16 @@ class Ui_Form(object):
         self.total_profit_widget_hlayout.addLayout(self.total_profit_widget_vlayout)
         self.portfolio_global_widget_layout.addWidget(self.total_profit_widget)
         self.portfolio_number_of_coins_widget = QtWidgets.QWidget(self.layoutWidget_3)
-        self.portfolio_number_of_coins_widget.setMaximumSize(QtCore.QSize(16777215, 90))
+        self.portfolio_number_of_coins_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.portfolio_number_of_coins_widget.setStyleSheet("background: #232323;\n"
 "border-radius: 25%;\n"
 "")
         self.portfolio_number_of_coins_widget.setObjectName("portfolio_number_of_coins_widget")
         self.horizontalLayoutWidget_9 = QtWidgets.QWidget(self.portfolio_number_of_coins_widget)
-        self.horizontalLayoutWidget_9.setGeometry(QtCore.QRect(0, 0, 281, 91))
+        self.horizontalLayoutWidget_9.setGeometry(QtCore.QRect(0, 0, int(281 * self.ratio), int(91 * self.ratio)))
         self.horizontalLayoutWidget_9.setObjectName("horizontalLayoutWidget_9")
         self.portfolio_number_of_coins_widget_hlayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_9)
-        self.portfolio_number_of_coins_widget_hlayout.setContentsMargins(25, 20, 25, 20)
+        self.portfolio_number_of_coins_widget_hlayout.setContentsMargins(int(25 * self.ratio), int(20 * self.ratio), int(25 * self.ratio), int(20 * self.ratio))
         self.portfolio_number_of_coins_widget_hlayout.setObjectName("portfolio_number_of_coins_widget_hlayout")
         self.portfolio_number_of_coins_widget_vlayout = QtWidgets.QVBoxLayout()
         self.portfolio_number_of_coins_widget_vlayout.setObjectName("portfolio_number_of_coins_widget_vlayout")
@@ -791,21 +795,21 @@ class Ui_Form(object):
         self.portfolio_number_of_coins_widgetvalue.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 24px;")
+"font-size: " + str(int(24 * self.ratio)) + "px;")
         self.portfolio_number_of_coins_widgetvalue.setObjectName("portfolio_number_of_coins_widgetvalue")
         self.portfolio_number_of_coins_widget_vlayout.addWidget(self.portfolio_number_of_coins_widgetvalue)
         self.portfolio_number_of_coins_widget_label = QtWidgets.QLabel(self.horizontalLayoutWidget_9)
         self.portfolio_number_of_coins_widget_label.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: #808080;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: 18px;")
+"font-size: " + str(int(18 * self.ratio)) + "px;")
         self.portfolio_number_of_coins_widget_label.setObjectName("portfolio_number_of_coins_widget_label")
         self.portfolio_number_of_coins_widget_vlayout.addWidget(self.portfolio_number_of_coins_widget_label)
         self.portfolio_number_of_coins_widget_vlayout.setStretch(0, 2)
         self.portfolio_number_of_coins_widget_vlayout.setStretch(1, 1)
         self.portfolio_number_of_coins_widget_hlayout.addLayout(self.portfolio_number_of_coins_widget_vlayout)
         self.portfolio_global_widget_layout.addWidget(self.portfolio_number_of_coins_widget)
-        spacerItem8 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem8 = QtWidgets.QSpacerItem(int(40 * self.ratio), int(20 * self.ratio), QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.portfolio_global_widget_layout.addItem(spacerItem8)
         self.portfolio_global_widget_layout.setStretch(0, 1)
         self.portfolio_global_widget_layout.setStretch(1, 1)
@@ -848,12 +852,12 @@ class Ui_Form(object):
         self.portfolio_table_widget.setHorizontalHeaderItem(6, item)
         item = QtWidgets.QTableWidgetItem()
         self.portfolio_table_widget.setHorizontalHeaderItem(7, item)
-        self.portfolio_table_widget.horizontalHeader().setDefaultSectionSize(200)
+        self.portfolio_table_widget.horizontalHeader().setDefaultSectionSize(int(200 * self.ratio))
         self.portfolio_table_widget.horizontalHeader().setHighlightSections(True)
-        self.portfolio_table_widget.horizontalHeader().setMinimumSectionSize(200)
+        self.portfolio_table_widget.horizontalHeader().setMinimumSectionSize(int(200 * self.ratio))
         self.portfolio_table_widget.horizontalHeader().setStretchLastSection(True)
         self.portfolio_table_widget.verticalHeader().setVisible(False)
-        self.portfolio_table_widget.verticalHeader().setMinimumSectionSize(30)
+        self.portfolio_table_widget.verticalHeader().setMinimumSectionSize(int(30 * self.ratio))
         self.portfolio_table_widget.verticalHeader().setSortIndicatorShown(False)
         self.portfolio_table_widget.verticalHeader().setStretchLastSection(False)
         self.portfolio_layout.addWidget(self.portfolio_table_widget)
