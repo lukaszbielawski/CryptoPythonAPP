@@ -11,10 +11,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_Form(object):
-    
-    def __init__(self, ratio):
+class View(object):
+        
+    def __init__(self, ratio, window, app):
         self.ratio = ratio
+        self.app = app
+        self.window = window
 
     def setupUi(self, Form):
         Form.setObjectName("Form")
@@ -23,7 +25,8 @@ class Ui_Form(object):
         Form.setMaximumSize(QtCore.QSize(int(1920 * self.ratio), int(1080 * self.ratio)))
         Form.setStyleSheet("background-color: #171717;")
         self.quit_button = QtWidgets.QToolButton(Form)
-        self.quit_button.setGeometry(QtCore.QRect(int(1890), 0, int(30), int(30)))
+        self.quit_button.clicked.connect(self.window.close)
+        self.quit_button.setGeometry(QtCore.QRect(int(1890 * self.ratio), 0, int(30 * self.ratio), int(30 * self.ratio)))
         self.quit_button.setStyleSheet("background: #ff5252;\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
@@ -40,6 +43,7 @@ class Ui_Form(object):
         self.tooltip_layout.setSpacing(int(20 * self.ratio))
         self.tooltip_layout.setObjectName("tooltip_layout")
         self.main_button = QtWidgets.QPushButton(self.layoutWidget)
+        self.main_button.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(0))
         self.main_button.setMinimumSize(QtCore.QSize(int(100 * self.ratio), int(100 * self.ratio)))
         self.main_button.setStyleSheet("border-image: url(./resources/logo.png);\n"
 "border-radius: 50%;")
@@ -47,6 +51,7 @@ class Ui_Form(object):
         self.main_button.setObjectName("main_button")
         self.tooltip_layout.addWidget(self.main_button)
         self.favourites_button = QtWidgets.QPushButton(self.layoutWidget)
+        self.favourites_button.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(2))
         self.favourites_button.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
@@ -54,6 +59,7 @@ class Ui_Form(object):
         self.favourites_button.setObjectName("favourites_button")
         self.tooltip_layout.addWidget(self.favourites_button)
         self.my_portfolio_button = QtWidgets.QPushButton(self.layoutWidget)
+        self.my_portfolio_button.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(3))
         self.my_portfolio_button.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
@@ -89,14 +95,14 @@ class Ui_Form(object):
         self.market_cap_prefix_label.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size:20px;")
+"font-size: " + str(int(20 * self.ratio)) + "px;")
         self.market_cap_prefix_label.setObjectName("market_cap_prefix_label")
         self.market_cap_label_layout.addWidget(self.market_cap_prefix_label)
         self.market_cap_suffix_label = QtWidgets.QLabel(self.layoutWidget1)
         self.market_cap_suffix_label.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size:20px;")
+"font-size: " + str(int(20 * self.ratio)) + "px;")
         self.market_cap_suffix_label.setObjectName("market_cap_suffix_label")
         self.market_cap_label_layout.addWidget(self.market_cap_suffix_label)
         spacerItem1 = QtWidgets.QSpacerItem(int(40 * self.ratio), int(20 * self.ratio), QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -245,15 +251,18 @@ class Ui_Form(object):
         self.master_table_widget.setStyleSheet("QHeaderView::section {\n"
 "    background-color:  #232323;\n"
 "    border: none;\n"
-"    height: 32px;\n"
+"    height: " + str(int(32 * self.ratio)) + "px;\n"
 "    color:white;\n"
 "    font-family: Arial, Helvetica, sans-serif;\n"
-"    font-size: 16px;\n"
+"    font-size: " + str(int(16 * self.ratio)) + "px;\n"
 "    font-weight: 500;\n"
 "}\n"
 "QFrame {\n"
-"    background: #AA9f03;\n"
+"    background: rgba(0, 0, 0, 0);\n"
 "    border: none;\n"
+"}    \n"
+"QTableWidget  {\n"
+"    gridline-color: #232323;\n"
 "}    \n"
 "")
         self.master_table_widget.setObjectName("master_table_widget")
@@ -277,10 +286,10 @@ class Ui_Form(object):
         self.master_table_widget.setHorizontalHeaderItem(7, item)
         self.master_table_widget.horizontalHeader().setDefaultSectionSize(int(200 * self.ratio))
         self.master_table_widget.horizontalHeader().setHighlightSections(True)
-        self.master_table_widget.horizontalHeader().setMinimumSectionSize(int(200 * self.ratio))
+        # self.master_table_widget.horizontalHeader().setMinimumSectionSize(int(200 * self.ratio))
         self.master_table_widget.horizontalHeader().setStretchLastSection(True)
         self.master_table_widget.verticalHeader().setVisible(False)
-        self.master_table_widget.verticalHeader().setMinimumSectionSize(int(30 * self.ratio))
+        # self.master_table_widget.verticalHeader().setMinimumSectionSize(int(30 * self.ratio))
         self.master_table_widget.verticalHeader().setSortIndicatorShown(False)
         self.master_table_widget.verticalHeader().setStretchLastSection(False)
         self.master_layout.addWidget(self.master_table_widget)
@@ -559,10 +568,10 @@ class Ui_Form(object):
         self.time_change_table.setStyleSheet("QHeaderView::section {\n"
 "    background-color:  #232323;\n"
 "    border: none;\n"
-"    height: 32px;\n"
+"    height: " + str(int(32 * self.ratio)) + "px;\n"
 "    color:white;\n"
 "    font-family: Arial, Helvetica, sans-serif;\n"
-"    font-size: 16px;\n"
+"    font-size: " + str(int(16 * self.ratio)) + "px;\n"
 "    font-weight: 500;\n"
 "}\n"
 "QFrame {\n"
@@ -611,14 +620,14 @@ class Ui_Form(object):
         self.favourites_number_of_favourite_coins_label.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size:20px;")
+"font-size: " + str(int(20 * self.ratio)) + "px;")
         self.favourites_number_of_favourite_coins_label.setObjectName("favourites_number_of_favourite_coins_label")
         self.favourites_number_of_favourite_coins_layout.addWidget(self.favourites_number_of_favourite_coins_label)
         self.favourites_number_of_favourite_coins_value = QtWidgets.QLabel(self.layoutWidget_2)
         self.favourites_number_of_favourite_coins_value.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size:20px;")
+"font-size: " + str(int(20 * self.ratio)) + "px;")
         self.favourites_number_of_favourite_coins_value.setObjectName("favourites_number_of_favourite_coins_value")
         self.favourites_number_of_favourite_coins_layout.addWidget(self.favourites_number_of_favourite_coins_value)
         spacerItem7 = QtWidgets.QSpacerItem(int(40 * self.ratio), int(20 * self.ratio), QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -629,15 +638,18 @@ class Ui_Form(object):
         self.favourites_table.setStyleSheet("QHeaderView::section {\n"
 "    background-color:  #232323;\n"
 "    border: none;\n"
-"    height: 32px;\n"
+"    height: " + str(int(32 * self.ratio)) + "px;\n"
 "    color:white;\n"
 "    font-family: Arial, Helvetica, sans-serif;\n"
-"    font-size: 16px;\n"
+"    font-size: " + str(int(16 * self.ratio)) + "px;\n"
 "    font-weight: 500;\n"
 "}\n"
 "QFrame {\n"
 "    background:#5826a3;\n"
 "    border: none;\n"
+"}    \n"
+"QTableWidget  {\n"
+"    gridline-color: #232323;\n"
 "}    \n"
 "")
         self.favourites_table.setObjectName("favourites_table")
@@ -661,10 +673,10 @@ class Ui_Form(object):
         self.favourites_table.setHorizontalHeaderItem(7, item)
         self.favourites_table.horizontalHeader().setDefaultSectionSize(int(200 * self.ratio))
         self.favourites_table.horizontalHeader().setHighlightSections(True)
-        self.favourites_table.horizontalHeader().setMinimumSectionSize(int(200 * self.ratio))
+        # self.favourites_table.horizontalHeader().setMinimumSectionSize(int(200 * self.ratio))
         self.favourites_table.horizontalHeader().setStretchLastSection(True)
         self.favourites_table.verticalHeader().setVisible(False)
-        self.favourites_table.verticalHeader().setMinimumSectionSize(int(30 * self.ratio))
+        # self.favourites_table.verticalHeader().setMinimumSectionSize(int(30 * self.ratio))
         self.favourites_table.verticalHeader().setSortIndicatorShown(False)
         self.favourites_table.verticalHeader().setStretchLastSection(False)
         self.favourites_layout.addWidget(self.favourites_table)
@@ -822,15 +834,18 @@ class Ui_Form(object):
         self.portfolio_table_widget.setStyleSheet("QHeaderView::section {\n"
 "    background-color:  #232323;\n"
 "    border: none;\n"
-"    height: 32px;\n"
+"    height: " + str(int(32 * self.ratio)) + "px;\n"
 "    color:white;\n"
 "    font-family: Arial, Helvetica, sans-serif;\n"
-"    font-size: 16px;\n"
+"    font-size: " + str(int(16 * self.ratio)) + "px;\n"
 "    font-weight: 500;\n"
 "}\n"
 "QFrame {\n"
 "    background: #072463;\n"
 "    border: none;\n"
+"}    \n"
+"QTableWidget  {\n"
+"    gridline-color: #232323;\n"
 "}    \n"
 "")
         self.portfolio_table_widget.setObjectName("portfolio_table_widget")
@@ -854,10 +869,10 @@ class Ui_Form(object):
         self.portfolio_table_widget.setHorizontalHeaderItem(7, item)
         self.portfolio_table_widget.horizontalHeader().setDefaultSectionSize(int(200 * self.ratio))
         self.portfolio_table_widget.horizontalHeader().setHighlightSections(True)
-        self.portfolio_table_widget.horizontalHeader().setMinimumSectionSize(int(200 * self.ratio))
+        # self.portfolio_table_widget.horizontalHeader().setMinimumSectionSize(int(200 * self.ratio))
         self.portfolio_table_widget.horizontalHeader().setStretchLastSection(True)
         self.portfolio_table_widget.verticalHeader().setVisible(False)
-        self.portfolio_table_widget.verticalHeader().setMinimumSectionSize(int(30 * self.ratio))
+        # self.portfolio_table_widget.verticalHeader().setMinimumSectionSize(int(30 * self.ratio))
         self.portfolio_table_widget.verticalHeader().setSortIndicatorShown(False)
         self.portfolio_table_widget.verticalHeader().setStretchLastSection(False)
         self.portfolio_layout.addWidget(self.portfolio_table_widget)

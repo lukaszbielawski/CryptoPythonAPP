@@ -148,7 +148,7 @@ font-size: 32px;</string>
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="master_widget">
        <widget class="QWidget" name="layoutWidget">
@@ -234,7 +234,7 @@ border-radius: 25%;
                 <x>0</x>
                 <y>0</y>
                 <width>281</width>
-                <height>91</height>
+                <height>96</height>
                </rect>
               </property>
               <layout class="QHBoxLayout" name="market_cap_widget_hlayout" stretch="0">
@@ -303,7 +303,7 @@ border-radius: 25%;
                 <x>0</x>
                 <y>0</y>
                 <width>281</width>
-                <height>91</height>
+                <height>96</height>
                </rect>
               </property>
               <layout class="QHBoxLayout" name="trading_volume_widget_hlayout" stretch="0">
@@ -372,7 +372,7 @@ border-radius: 25%;
                 <x>0</x>
                 <y>0</y>
                 <width>291</width>
-                <height>91</height>
+                <height>96</height>
                </rect>
               </property>
               <layout class="QHBoxLayout" name="btc_dominance_widget_hlayout" stretch="0">
@@ -453,7 +453,7 @@ border-radius: 25%;
                 <x>0</x>
                 <y>0</y>
                 <width>281</width>
-                <height>91</height>
+                <height>96</height>
                </rect>
               </property>
               <layout class="QHBoxLayout" name="number_of_coins_widget_hlayout" stretch="0">
@@ -842,7 +842,7 @@ border-radius: 25%;
                 <x>0</x>
                 <y>0</y>
                 <width>291</width>
-                <height>91</height>
+                <height>96</height>
                </rect>
               </property>
               <layout class="QHBoxLayout" name="details_market_cap_widget_hlayout" stretch="0">
@@ -911,7 +911,7 @@ border-radius: 25%;
                 <x>0</x>
                 <y>0</y>
                 <width>291</width>
-                <height>91</height>
+                <height>96</height>
                </rect>
               </property>
               <layout class="QHBoxLayout" name="details_trading_volume_widget_hlayout" stretch="0">
@@ -980,7 +980,7 @@ border-radius: 25%;
                 <x>0</x>
                 <y>0</y>
                 <width>291</width>
-                <height>91</height>
+                <height>96</height>
                </rect>
               </property>
               <layout class="QHBoxLayout" name="details_circulating_supply_widget_hlayout" stretch="0">
@@ -1061,7 +1061,7 @@ border-radius: 25%;
                 <x>0</x>
                 <y>0</y>
                 <width>291</width>
-                <height>91</height>
+                <height>96</height>
                </rect>
               </property>
               <layout class="QHBoxLayout" name="details_all_time_high_widget_hlayout" stretch="0">
@@ -1130,7 +1130,7 @@ border-radius: 25%;
                 <x>0</x>
                 <y>0</y>
                 <width>291</width>
-                <height>91</height>
+                <height>96</height>
                </rect>
               </property>
               <layout class="QHBoxLayout" name="details_all_time_low_widget_hlayout" stretch="0">
@@ -1490,7 +1490,7 @@ border-radius: 25%;
                 <x>0</x>
                 <y>0</y>
                 <width>281</width>
-                <height>91</height>
+                <height>96</height>
                </rect>
               </property>
               <layout class="QHBoxLayout" name="portfolio_total_balance_widget_hlayout" stretch="0">
@@ -1559,7 +1559,7 @@ border-radius: 25%;
                 <x>0</x>
                 <y>0</y>
                 <width>281</width>
-                <height>91</height>
+                <height>96</height>
                </rect>
               </property>
               <layout class="QHBoxLayout" name="portfolio_change_widget_hlayout" stretch="0">
@@ -1628,7 +1628,7 @@ border-radius: 25%;
                 <x>0</x>
                 <y>0</y>
                 <width>281</width>
-                <height>91</height>
+                <height>96</height>
                </rect>
               </property>
               <layout class="QHBoxLayout" name="total_profit_widget_hlayout" stretch="0">
@@ -1709,7 +1709,7 @@ border-radius: 25%;
                 <x>0</x>
                 <y>0</y>
                 <width>281</width>
-                <height>91</height>
+                <height>96</height>
                </rect>
               </property>
               <layout class="QHBoxLayout" name="portfolio_number_of_coins_widget_hlayout" stretch="0">
