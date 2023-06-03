@@ -1,4 +1,4 @@
-from PyQt5 import QtCore, QtWidgets, uic
+from PyQt5 import QtCore, QtGui, QtWidgets, uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget
 
 class MainWindow(QMainWindow):

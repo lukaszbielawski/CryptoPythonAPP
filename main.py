@@ -3,29 +3,26 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from PyQt5 import QtCore, QtWidgets, uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget
-from view.view import View
+import view.view as view
 from view.MainWindow import MainWindow
-from viewmodel.master_viewmodel import MasterViewModel
-  
+import viewmodel.main_viewmodel as main_vm
+
 class Application(QApplication):
-    def __init__(self, args):
+    def __init__(self, args, ratio):
         super(QApplication, self).__init__(args)
         self.window = MainWindow(self)
-        self.ratio = 0.5
-        self.view = View(self.ratio, self.window, self)
-        self.view.setupUi(self.window)
-        self.__initViewModels()
+        self.ratio = ratio
+        self.view = view.View(self.ratio, self.window)
+        self.main_viewmodel = main_vm.MainViewModel(self.view)
         self.run()
 
-    def __initViewModels(self):
-        self.master_viewmodel = MasterViewModel(self.view)
-    
     def run(self):
         self.window.show()
         sys.exit(self.exec_())
 
 if __name__ == '__main__':
-    app = Application(sys.argv)
+    ratio = 0.5
+    app = Application(sys.argv, ratio)
    
     
     

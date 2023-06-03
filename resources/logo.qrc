@@ -2,6 +2,9 @@
   <qresource prefix="logo">
     <file>logo.png</file>
   </qresource>
+  <qresource prefix="tick">
+    <file>tick.png</file>
+  </qresource>
   <qresource prefix="plus">
     <file>plus_fill.png</file>
     <file>plus_empty.png</file>

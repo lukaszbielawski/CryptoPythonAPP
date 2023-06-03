@@ -10,27 +10,26 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-
 class View(object):
         
-    def __init__(self, ratio, window, app):
+    def __init__(self, ratio, window):
         self.ratio = ratio
-        self.app = app
         self.window = window
+        self.setupView(self.window)
 
-    def setupUi(self, Form):
+    def setupView(self, Form):
         Form.setObjectName("Form")
         Form.resize(int(1920 * self.ratio), int(1080 * self.ratio))
         Form.setMinimumSize(QtCore.QSize(int(1920 * self.ratio), int(1080 * self.ratio)))
         Form.setMaximumSize(QtCore.QSize(int(1920 * self.ratio), int(1080 * self.ratio)))
         Form.setStyleSheet("background-color: #171717;")
         self.quit_button = QtWidgets.QToolButton(Form)
-        self.quit_button.clicked.connect(self.window.close)
         self.quit_button.setGeometry(QtCore.QRect(int(1890 * self.ratio), 0, int(30 * self.ratio), int(30 * self.ratio)))
         self.quit_button.setStyleSheet("background: #ff5252;\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
-"font-size: " + str(int(20 * self.ratio)) + "px;")
+"font-size: " + str(int(20 * self.ratio)) + "px;"
+)
         self.quit_button.setObjectName("quit_button")
         self.layoutWidget = QtWidgets.QWidget(Form)
         self.layoutWidget.setGeometry(QtCore.QRect(int(30 * self.ratio), int(30 * self.ratio), int(1861 * self.ratio), int(1051 * self.ratio)))
@@ -43,15 +42,14 @@ class View(object):
         self.tooltip_layout.setSpacing(int(20 * self.ratio))
         self.tooltip_layout.setObjectName("tooltip_layout")
         self.main_button = QtWidgets.QPushButton(self.layoutWidget)
-        self.main_button.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(0))
         self.main_button.setMinimumSize(QtCore.QSize(int(100 * self.ratio), int(100 * self.ratio)))
         self.main_button.setStyleSheet("border-image: url(./resources/logo.png);\n"
-"border-radius: 50%;")
+"border-radius: " + str(int(24 * self.ratio)) + "px;")
         self.main_button.setText("")
         self.main_button.setObjectName("main_button")
         self.tooltip_layout.addWidget(self.main_button)
         self.favourites_button = QtWidgets.QPushButton(self.layoutWidget)
-        self.favourites_button.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(2))
+        
         self.favourites_button.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
@@ -59,7 +57,7 @@ class View(object):
         self.favourites_button.setObjectName("favourites_button")
         self.tooltip_layout.addWidget(self.favourites_button)
         self.my_portfolio_button = QtWidgets.QPushButton(self.layoutWidget)
-        self.my_portfolio_button.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(3))
+       
         self.my_portfolio_button.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
@@ -68,6 +66,31 @@ class View(object):
         self.tooltip_layout.addWidget(self.my_portfolio_button)
         spacerItem = QtWidgets.QSpacerItem(int(40 * self.ratio), int(20 * self.ratio), QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.tooltip_layout.addItem(spacerItem)
+
+        self.tooltip_search_text = QtWidgets.QLineEdit(self.layoutWidget, placeholderText='Search...')
+        self.tooltip_search_text.setMaxLength(30)
+        # self.details_portfolio_bought_amount_text.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.tooltip_search_text.setMinimumSize(QtCore.QSize(int(200 * self.ratio), int(25 * self.ratio)))
+        self.tooltip_search_text.setMaximumSize(QtCore.QSize(int(200 * self.ratio), int(25 * self.ratio)))
+        self.tooltip_search_text.setStyleSheet("background: #232323;\n"
+"border: 1px solid;\n"
+"color: white;\n"
+"font-family: Arial, Helvetica, sans-serif;\n"
+"font-size: " + str(int(20 * self.ratio)) + "px;\n"
+"")
+        self.tooltip_search_text.setObjectName("tooltip_search_text")
+        self.tooltip_layout.addWidget(self.tooltip_search_text)
+
+        self.tooltip_search_button = QtWidgets.QPushButton(self.layoutWidget)
+        
+        self.tooltip_search_button.setMinimumSize(QtCore.QSize(int(40 * self.ratio), int(40 * self.ratio)))
+        self.tooltip_search_button.setMaximumSize(QtCore.QSize(int(40 * self.ratio), int(40 * self.ratio)))
+        self.tooltip_search_button.setStyleSheet("border-image: url(./resources/search.png);\n"
+"background: rgba(0, 0, 0, 0);")
+        self.tooltip_search_button.setText("")
+        self.tooltip_search_button.setObjectName("tooltip_search_button")
+        self.tooltip_layout.addWidget(self.tooltip_search_button)
+
         self.main_layout.addLayout(self.tooltip_layout)
         self.toolbar_line = QtWidgets.QFrame(self.layoutWidget)
         self.toolbar_line.setMinimumSize(QtCore.QSize(0, 1))
@@ -114,7 +137,7 @@ class View(object):
         self.market_cap_widget = QtWidgets.QWidget(self.layoutWidget1)
         self.market_cap_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.market_cap_widget.setStyleSheet("background: #232323;\n"
-"border-radius: 25%;\n"
+"border-radius: " + str(int(24 * self.ratio)) + "px;\n"
 "")
         self.market_cap_widget.setObjectName("market_cap_widget")
         self.horizontalLayoutWidget_2 = QtWidgets.QWidget(self.market_cap_widget)
@@ -143,9 +166,9 @@ class View(object):
         self.market_cap_widget_hlayout.addLayout(self.market_cap_widget_vlayout)
         self.global_widgets_layout.addWidget(self.market_cap_widget)
         self.trading_volume_widget = QtWidgets.QWidget(self.layoutWidget1)
-        self.trading_volume_widget.setMaximumSize(QtCore.QSize(16777215, int(90)))
+        self.trading_volume_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.trading_volume_widget.setStyleSheet("background: #232323;\n"
-"border-radius: 25%;\n"
+"border-radius: " + str(int(24 * self.ratio)) + "px;\n"
 "")
         self.trading_volume_widget.setObjectName("trading_volume_widget")
         self.horizontalLayoutWidget_3 = QtWidgets.QWidget(self.trading_volume_widget)
@@ -176,7 +199,7 @@ class View(object):
         self.btc_dominance_widget = QtWidgets.QWidget(self.layoutWidget1)
         self.btc_dominance_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.btc_dominance_widget.setStyleSheet("background: #232323;\n"
-"border-radius: 25%;\n"
+"border-radius: " + str(int(24 * self.ratio)) + "px;\n"
 "")
         self.btc_dominance_widget.setObjectName("btc_dominance_widget")
         self.horizontalLayoutWidget_4 = QtWidgets.QWidget(self.btc_dominance_widget)
@@ -209,7 +232,7 @@ class View(object):
         self.number_of_coins_widget = QtWidgets.QWidget(self.layoutWidget1)
         self.number_of_coins_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.number_of_coins_widget.setStyleSheet("background: #232323;\n"
-"border-radius: 25%;\n"
+"border-radius: " + str(int(24 * self.ratio)) + "px;\n"
 "")
         self.number_of_coins_widget.setObjectName("number_of_coins_widget")
         self.horizontalLayoutWidget_5 = QtWidgets.QWidget(self.number_of_coins_widget)
@@ -312,7 +335,7 @@ class View(object):
 "color: white;\n"
 "font-family: Arial, Helvetica, sans-serif;\n"
 "font-size: " + str(int(14 * self.ratio)) + "px;\n"
-"border-radius: 10%;\n"
+"border-radius: " + str(int(9 * self.ratio)) + "px;\n"
 "font-weight: 500;")
         self.rank_label.setAlignment(QtCore.Qt.AlignCenter)
         self.rank_label.setObjectName("rank_label")
@@ -348,7 +371,7 @@ class View(object):
         self.pushButton = QtWidgets.QPushButton(self.layoutWidget2)
         self.pushButton.setMinimumSize(QtCore.QSize(int(30 * self.ratio), int(30 * self.ratio)))
         self.pushButton.setMaximumSize(QtCore.QSize(int(30 * self.ratio), int(30 * self.ratio)))
-        self.pushButton.setStyleSheet("border-image: url(./star/star_empty.png);\n"
+        self.pushButton.setStyleSheet("border-image: url(./resources/star_empty.png);\n"
 "background: rgba(0, 0, 0, 0);")
         self.pushButton.setText("")
         self.pushButton.setObjectName("pushButton")
@@ -356,11 +379,74 @@ class View(object):
         self.pushButton_2 = QtWidgets.QPushButton(self.layoutWidget2)
         self.pushButton_2.setMinimumSize(QtCore.QSize(int(25 * self.ratio), int(25 * self.ratio)))
         self.pushButton_2.setMaximumSize(QtCore.QSize(int(25 * self.ratio), int(25 * self.ratio)))
-        self.pushButton_2.setStyleSheet("border-image: url(./plus/plus_fill.png);\n"
+        self.pushButton_2.setStyleSheet("border-image: url(./resources/plus_fill.png);\n"
 "background: rgba(0, 0, 0, 0);")
         self.pushButton_2.setText("")
         self.pushButton_2.setObjectName("pushButton_2")
         self.details_coin_id_layout.addWidget(self.pushButton_2)
+
+        self.details_portfolio_bought_amount_label = QtWidgets.QLabel(self.layoutWidget2)
+        self.details_portfolio_bought_amount_label.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
+"color: white;\n"
+"font-family: Arial, Helvetica, sans-serif;\n"
+"font-size: " + str(int(16 * self.ratio)) + "px;\n"
+"font-weight: bold;")
+        self.details_portfolio_bought_amount_label.setObjectName("details_portfolio_bought_amount_label")
+        self.details_portfolio_bought_amount_label.hide()
+        self.details_coin_id_layout.addWidget(self.details_portfolio_bought_amount_label)
+        self.details_portfolio_bought_amount_text = QtWidgets.QLineEdit(placeholderText='Amount')
+        self.details_portfolio_bought_amount_text.setMaxLength(10)
+        # self.details_portfolio_bought_amount_text.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.details_portfolio_bought_amount_text.setMinimumSize(QtCore.QSize(int(100 * self.ratio), int(25 * self.ratio)))
+        self.details_portfolio_bought_amount_text.setMaximumSize(QtCore.QSize(int(100 * self.ratio), int(25 * self.ratio)))
+        self.details_portfolio_bought_amount_text.setStyleSheet("background: #232323;\n"
+"border: 1px solid;\n"
+"color: white;\n"
+"font-family: Arial, Helvetica, sans-serif;\n"
+"font-size: " + str(int(16 * self.ratio)) + "px;\n"
+"font-weight: bold;\n"
+"")
+        self.details_portfolio_bought_amount_text.setObjectName("details_portfolio_bought_amount_text")
+        self.details_portfolio_bought_amount_text.hide()
+        self.details_coin_id_layout.addWidget(self.details_portfolio_bought_amount_text)
+
+        self.details_portfolio_price_label = QtWidgets.QLabel(self.layoutWidget2)
+        self.details_portfolio_price_label.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
+"color: white;\n"
+"font-family: Arial, Helvetica, sans-serif;\n"
+"font-size: " + str(int(16 * self.ratio)) + "px;\n"
+"font-weight: bold;")
+        self.details_portfolio_price_label.setObjectName("details_portfolio_price_label")
+        self.details_portfolio_price_label.hide()
+        self.details_coin_id_layout.addWidget(self.details_portfolio_price_label)
+        
+        self.details_portfolio_price_text = QtWidgets.QLineEdit(placeholderText='Unit price')
+        self.details_portfolio_price_text.setMaxLength(10)
+        # self.details_portfolio_bought_amount_text.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.details_portfolio_price_text.setMinimumSize(QtCore.QSize(int(100 * self.ratio), int(25 * self.ratio)))
+        self.details_portfolio_price_text.setMaximumSize(QtCore.QSize(int(100 * self.ratio), int(25 * self.ratio)))
+        self.details_portfolio_price_text.setStyleSheet("background: #232323;\n"
+"border: 1px solid;\n"
+"color: white;\n"
+"font-family: Arial, Helvetica, sans-serif;\n"
+"font-size: " + str(int(16 * self.ratio)) + "px;\n"
+"font-weight: bold;\n"
+"")
+        self.details_portfolio_price_text.setObjectName("details_portfolio_price_text")
+        self.details_portfolio_price_text.hide()
+        self.details_coin_id_layout.addWidget(self.details_portfolio_price_text)
+        
+
+        self.details_portfolio_tick_button = QtWidgets.QPushButton(self.layoutWidget2)
+        self.details_portfolio_tick_button.setMinimumSize(QtCore.QSize(int(25 * self.ratio), int(25 * self.ratio)))
+        self.details_portfolio_tick_button.setMaximumSize(QtCore.QSize(int(25 * self.ratio), int(25 * self.ratio)))
+        self.details_portfolio_tick_button.setStyleSheet("border-image: url(./resources/tick.png);\n"
+"background: rgba(0, 0, 0, 0);")
+        self.details_portfolio_tick_button.setText("")
+        self.details_portfolio_tick_button.setObjectName("details_portfolio_tick_button")
+        self.details_portfolio_tick_button.hide()
+        self.details_coin_id_layout.addWidget(self.details_portfolio_tick_button)
+
         spacerItem3 = QtWidgets.QSpacerItem(int(40 * self.ratio), int(20 * self.ratio), QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.details_coin_id_layout.addItem(spacerItem3)
         self.details_layout.addLayout(self.details_coin_id_layout)
@@ -392,11 +478,11 @@ class View(object):
         self.details_market_cap_widget = QtWidgets.QWidget(self.layoutWidget2)
         self.details_market_cap_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.details_market_cap_widget.setStyleSheet("background: #232323;\n"
-"border-radius: 25%;\n"
+"border-radius: " + str(int(24 * self.ratio)) + "px;\n"
 "")
         self.details_market_cap_widget.setObjectName("details_market_cap_widget")
         self.horizontalLayoutWidget_10 = QtWidgets.QWidget(self.details_market_cap_widget)
-        self.horizontalLayoutWidget_10.setGeometry(QtCore.QRect(0, 0, 291, int(91 * self.ratio)))
+        self.horizontalLayoutWidget_10.setGeometry(QtCore.QRect(0, 0, int(291 * self.ratio), int(91 * self.ratio)))
         self.horizontalLayoutWidget_10.setObjectName("horizontalLayoutWidget_10")
         self.details_market_cap_widget_hlayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_10)
         self.details_market_cap_widget_hlayout.setContentsMargins(int(25 * self.ratio), int(20 * self.ratio), int(25 * self.ratio), int(20 * self.ratio))
@@ -423,7 +509,7 @@ class View(object):
         self.details_trading_volume_widget = QtWidgets.QWidget(self.layoutWidget2)
         self.details_trading_volume_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.details_trading_volume_widget.setStyleSheet("background: #232323;\n"
-"border-radius: 25%;\n"
+"border-radius: " + str(int(24 * self.ratio)) + "px;\n"
 "")
         self.details_trading_volume_widget.setObjectName("details_trading_volume_widget")
         self.horizontalLayoutWidget_11 = QtWidgets.QWidget(self.details_trading_volume_widget)
@@ -454,7 +540,7 @@ class View(object):
         self.details_circulating_supply_widget = QtWidgets.QWidget(self.layoutWidget2)
         self.details_circulating_supply_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.details_circulating_supply_widget.setStyleSheet("background: #232323;\n"
-"border-radius: 25%;\n"
+"border-radius: " + str(int(24 * self.ratio)) + "px;\n"
 "")
         self.details_circulating_supply_widget.setObjectName("details_circulating_supply_widget")
         self.horizontalLayoutWidget_12 = QtWidgets.QWidget(self.details_circulating_supply_widget)
@@ -487,7 +573,7 @@ class View(object):
         self.details_all_time_high_widget = QtWidgets.QWidget(self.layoutWidget2)
         self.details_all_time_high_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.details_all_time_high_widget.setStyleSheet("background: #232323;\n"
-"border-radius: 25%;\n"
+"border-radius: " + str(int(24 * self.ratio)) + "px;\n"
 "")
         self.details_all_time_high_widget.setObjectName("details_all_time_high_widget")
         self.horizontalLayoutWidget_13 = QtWidgets.QWidget(self.details_all_time_high_widget)
@@ -519,7 +605,7 @@ class View(object):
         self.details_all_time_low_widget = QtWidgets.QWidget(self.layoutWidget2)
         self.details_all_time_low_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.details_all_time_low_widget.setStyleSheet("background: #232323;\n"
-"border-radius: 25%;\n"
+"border-radius: " + str(int(24 * self.ratio)) + "px;\n"
 "")
         self.details_all_time_low_widget.setObjectName("details_all_time_low_widget")
         self.horizontalLayoutWidget_14 = QtWidgets.QWidget(self.details_all_time_low_widget)
@@ -557,13 +643,15 @@ class View(object):
         self.details_coin_widgets_layout.setStretch(5, 18)
         self.details_layout.addLayout(self.details_coin_widgets_layout)
         self.matplotlib_widget = QtWidgets.QWidget(self.layoutWidget2)
-        self.matplotlib_widget.setMinimumSize(QtCore.QSize(0, int(500)))
-        self.matplotlib_widget.setStyleSheet("background: rgb(85, 0, 0)")
+        self.matplotlib_widget.setMinimumSize(QtCore.QSize(0, int(500 * self.ratio)))
+        # self.matplotlib_widget.setMaximumSize(QtCore.QSize(0, int(500 * self.ratio)))
+        # self.matplotlib_widget.setStyleSheet("background: rgb(85, 0, 0)")
         self.matplotlib_widget.setObjectName("matplotlib_widget")
         self.details_layout.addWidget(self.matplotlib_widget)
         self.time_change_table = QtWidgets.QTableWidget(self.layoutWidget2)
+        self.time_change_table.setContentsMargins(0, 0, 0, 0)
         self.time_change_table.setMinimumSize(QtCore.QSize(int(900 * self.ratio), int(64 * self.ratio)))
-        self.time_change_table.setMaximumSize(QtCore.QSize(16777215, int(64 * self.ratio)))
+        self.time_change_table.setMaximumSize(QtCore.QSize(16777215, int(96 * self.ratio)))
         self.time_change_table.viewport().setProperty("cursor", QtGui.QCursor(QtCore.Qt.ArrowCursor))
         self.time_change_table.setStyleSheet("QHeaderView::section {\n"
 "    background-color:  #232323;\n"
@@ -578,6 +666,9 @@ class View(object):
 "    background: rgba(0, 0, 0, 0);\n"
 "    border: none;\n"
 "    border-color: gray;\n"
+"}    \n"
+"QTableWidget  {\n"
+"    gridline-color: #232323;\n"
 "}    \n"
 "")
         self.time_change_table.setDragDropOverwriteMode(False)
@@ -598,11 +689,20 @@ class View(object):
         self.time_change_table.setHorizontalHeaderItem(5, item)
         self.time_change_table.horizontalHeader().setDefaultSectionSize(int(150 * self.ratio))
         self.time_change_table.horizontalHeader().setMinimumSectionSize(int(150 * self.ratio))
+        self.time_change_table.verticalHeader().setMinimumSectionSize(int(32 * self.ratio))
         self.time_change_table.verticalHeader().setVisible(False)
         self.details_layout.addWidget(self.time_change_table, 0, QtCore.Qt.AlignHCenter)
         spacerItem6 = QtWidgets.QSpacerItem(int(20 * self.ratio), int(20 * self.ratio), QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.details_layout.addItem(spacerItem6)
+
+        # self.details_layout.setStretch(0, 1)
+        # self.details_layout.setStretch(1, 1)
+        # self.details_layout.setStretch(2, 1)
         self.details_layout.setStretch(3, 1)
+        # self.details_layout.setStretch(4, 1)
+        # self.details_layout.setStretch(5, 10)
+        # self.details_layout.setStretch(6, 1)
+
         self.stackedWidget.addWidget(self.details_widget)
         self.favourites_widget = QtWidgets.QWidget()
         self.favourites_widget.setObjectName("favourites_widget")
@@ -611,7 +711,7 @@ class View(object):
         self.layoutWidget_2.setObjectName("layoutWidget_2")
         self.favourites_layout = QtWidgets.QVBoxLayout(self.layoutWidget_2)
         self.favourites_layout.setContentsMargins(0, 0, 0, 0)
-        self.favourites_layout.setSpacing(int(20))
+        self.favourites_layout.setSpacing(int(20 * self.ratio))
         self.favourites_layout.setObjectName("favourites_layout")
         self.favourites_number_of_favourite_coins_layout = QtWidgets.QHBoxLayout()
         self.favourites_number_of_favourite_coins_layout.setSpacing(int(6 * self.ratio))
@@ -645,7 +745,7 @@ class View(object):
 "    font-weight: 500;\n"
 "}\n"
 "QFrame {\n"
-"    background:#5826a3;\n"
+"    background: rgba(0, 0, 0, 0);\n"
 "    border: none;\n"
 "}    \n"
 "QTableWidget  {\n"
@@ -697,7 +797,7 @@ class View(object):
         self.portfolio_total_balance_widget = QtWidgets.QWidget(self.layoutWidget_3)
         self.portfolio_total_balance_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.portfolio_total_balance_widget.setStyleSheet("background: #232323;\n"
-"border-radius: 25%;\n"
+"border-radius: " + str(int(24 * self.ratio)) + "px;\n"
 "")
         self.portfolio_total_balance_widget.setObjectName("portfolio_total_balance_widget")
         self.horizontalLayoutWidget_6 = QtWidgets.QWidget(self.portfolio_total_balance_widget)
@@ -728,7 +828,7 @@ class View(object):
         self.portfolio_change_widget = QtWidgets.QWidget(self.layoutWidget_3)
         self.portfolio_change_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.portfolio_change_widget.setStyleSheet("background: #232323;\n"
-"border-radius: 25%;\n"
+"border-radius: " + str(int(24 * self.ratio)) + "px;\n"
 "")
         self.portfolio_change_widget.setObjectName("portfolio_change_widget")
         self.horizontalLayoutWidget_7 = QtWidgets.QWidget(self.portfolio_change_widget)
@@ -759,7 +859,7 @@ class View(object):
         self.total_profit_widget = QtWidgets.QWidget(self.layoutWidget_3)
         self.total_profit_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.total_profit_widget.setStyleSheet("background: #232323;\n"
-"border-radius: 25%;\n"
+"border-radius: " + str(int(24 * self.ratio)) + "px;\n"
 "")
         self.total_profit_widget.setObjectName("total_profit_widget")
         self.horizontalLayoutWidget_8 = QtWidgets.QWidget(self.total_profit_widget)
@@ -792,7 +892,7 @@ class View(object):
         self.portfolio_number_of_coins_widget = QtWidgets.QWidget(self.layoutWidget_3)
         self.portfolio_number_of_coins_widget.setMaximumSize(QtCore.QSize(16777215, int(90 * self.ratio)))
         self.portfolio_number_of_coins_widget.setStyleSheet("background: #232323;\n"
-"border-radius: 25%;\n"
+"border-radius: " + str(int(24 * self.ratio)) + "px;\n"
 "")
         self.portfolio_number_of_coins_widget.setObjectName("portfolio_number_of_coins_widget")
         self.horizontalLayoutWidget_9 = QtWidgets.QWidget(self.portfolio_number_of_coins_widget)
@@ -841,7 +941,7 @@ class View(object):
 "    font-weight: 500;\n"
 "}\n"
 "QFrame {\n"
-"    background: #072463;\n"
+"    background: rgba(0, 0, 0, 0);\n"
 "    border: none;\n"
 "}    \n"
 "QTableWidget  {\n"
@@ -920,6 +1020,8 @@ class View(object):
         item.setText(_translate("Form", "Market cap"))
         self.rank_label.setText(_translate("Form", "Rank #1"))
         self.details_coin_name_label.setText(_translate("Form", "Bitcoin"))
+        self.details_portfolio_bought_amount_label.setText(_translate("Form", "Bought amount"))
+        self.details_portfolio_price_label.setText(_translate("Form", "Price (USD)"))
         self.details_coin_symbol_label.setText(_translate("Form", "BTC"))
         self.details_coin_price_label.setText(_translate("Form", "$27,811.46"))
         self.details_coin_change_label.setText(_translate("Form", "0.4%"))
