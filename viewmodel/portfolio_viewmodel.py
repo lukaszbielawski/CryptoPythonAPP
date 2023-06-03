@@ -4,9 +4,10 @@ from PyQt5.QtGui import QBrush, QColor, QFont
 from PyQt5.QtCore import Qt
 import view.view as view
 import viewmodel.details_viewmodel as details_vm
+from model.APIFetcher import APIFetcher
 
 class PortfolioViewModel():
-    def __init__(self, view: view.View, main_vm):
+    def __init__(self, view: view.View, main_vm, api: APIFetcher):
         print('portfolio nint')
         self.view = view
         self.main_vm = main_vm

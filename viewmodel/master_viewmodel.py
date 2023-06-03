@@ -4,39 +4,56 @@ from PyQt5.QtGui import QBrush, QColor, QFont
 from PyQt5.QtCore import Qt
 import view.view as view
 import viewmodel.details_viewmodel as details_vm
+from model.APIFetcher import APIFetcher
+from model.ListedCoinObject import ListedCoinObject
+import time
+import urllib
+from urllib.request import Request, urlopen
+
 class MasterViewModel():
-    def __init__(self, view: view.View, main_vm):
+    def __init__(self, view: view.View, main_vm, api: APIFetcher):
         print('master init')
         self.view = view
         self.main_vm = main_vm
-        self.table_size = 0
-        self.pages = 2
-        
-        self.isPageLoaded = dict()
+        self.api = api
+        self.row_count = 0
+        self.readyToScroll = True
         self.setMarketCapSuffixLabel(1.21, -7.0)
         self.setMarketCapWidgetValue('$931,333,754,362')
         self.setTradingVolumeWidgetValue('$31,333,754,362')
         self.setBtcDominanceWidgetValue('43.5%')
         self.setNumberOfCoinsValue(500)
+        self.__initFont()
         self.__cfgTable()
         
-        self.view.master_table_widget.setRowCount(self.table_size)
-        # self.addRow('1', './resources/logo.png', 'Bitcoin', 'BTC', '$26,961.43', '-0.1%', '-2.6%', '+2.4%', '$16,332,763,917', '$522,840,485,971')
+
+        self.loads = 0
+        
         self.loadPage()
-        self.loadPage()
+        # self.loadPage(100)
 
     class CoinLogoWidget(QLabel):
         def __init__(self, imagePath, parent):
             super(QLabel, self).__init__()
-            pixmap = QtGui.QPixmap(imagePath)
+            url = imagePath
+            request_site = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+            data = urlopen(request_site).read()
+            pixmap = QtGui.QPixmap()
+            pixmap.loadFromData(data)
             smaller_pic = pixmap.scaled(int(20 * parent.view.ratio), int(20 * parent.view.ratio))
             self.setPixmap(smaller_pic)
-
-    def addRow(self, no, coin_logo, coin_name, coin_symbol, price, one_hour, twenty_four_hour, seven_days, volume, market_cap):
+    
+    def __initFont(self):
+        self.arial = QFont()
+        self.arial.setFamily('Arial')
+        self.arial.setPixelSize(int(20 * self.view.ratio))
         
-        self.table_size += 1
-        self.view.master_table_widget.setRowCount(self.table_size)
-        self.view.master_table_widget.setRowHeight(self.table_size - 1, int(28 * self.view.ratio))
+
+    def addRow(self, index, no, coin_logo, coin_name, coin_symbol, price, one_hour, twenty_four_hour, seven_days, volume, market_cap):
+        
+        self.row_count += 1
+        self.view.master_table_widget.setRowCount(self.row_count)
+        self.view.master_table_widget.setRowHeight(index, int(28 * self.view.ratio))
 
         coin_data_widget = QWidget()
 
@@ -44,9 +61,9 @@ class MasterViewModel():
         coin_data_layout.setContentsMargins(8,0,0,0)
         coin_data_layout.setSpacing(int(8 * self.view.ratio))
 
-        coin_logo_widget = self.CoinLogoWidget(coin_logo, self)
-        coin_name_widget = QLabel(coin_name)
-        coin_symbol_widget = QLabel(coin_symbol)
+        coin_logo_widget = self.CoinLogoWidget(str(coin_logo), self)
+        coin_name_widget = QLabel(str(coin_name))
+        coin_symbol_widget = QLabel(str(coin_symbol))
 
         coin_data_layout.addWidget(coin_logo_widget)
         coin_data_layout.addWidget(coin_name_widget)
@@ -58,18 +75,16 @@ class MasterViewModel():
         coin_data_layout.setStretch(3, 1)
 
         coin_data_widget.setLayout(coin_data_layout)
+        ##miejsca znaczae
+        self.addItemAt(index, 0, QLabel(str(no)))
+        self.addItemAt(index, 1, coin_data_widget, coin_data_layout)
+        self.addItemAt(index, 2, QLabel(str(price)))
+        self.addItemAt(index, 3, QLabel(str(one_hour)))
+        self.addItemAt(index, 4, QLabel(str(twenty_four_hour)))
+        self.addItemAt(index, 5, QLabel(str(seven_days)))
+        self.addItemAt(index, 6, QLabel(str(volume)))
+        self.addItemAt(index, 7, QLabel(str(market_cap)))
 
-        self.addItemAt(self.table_size -1, 0, QLabel(str(no)))
-        self.addItemAt(self.table_size -1, 1, coin_data_widget, coin_data_layout)
-        self.addItemAt(self.table_size -1, 2, QLabel(price))
-        self.addItemAt(self.table_size -1, 3, QLabel(one_hour))
-        self.addItemAt(self.table_size -1, 4, QLabel(twenty_four_hour))
-        self.addItemAt(self.table_size -1, 5, QLabel(seven_days))
-        self.addItemAt(self.table_size -1, 6, QLabel(volume))
-        self.addItemAt(self.table_size -1, 7, QLabel(market_cap))
-
-
-        
 
     def __cfgTable(self):
         self.view.master_table_widget.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -98,89 +113,76 @@ class MasterViewModel():
     def addItemAt(self, row, column, item: QWidget, layout=None):
         # item.setStyleSheet("QLabel { background-color : rgba(0, 0, 0, 0); color : white;}")
         
-        arial = QFont()
-        arial.setFamily('Arial')
         
         if column != 1:
             item.setAlignment(Qt.AlignCenter)
             item.setStyleSheet("QLabel { background-color : rgba(0, 0, 0, 0); color : #778899;}")
+            item.setFont(self.arial)
 
         match column:
             case 0:
                 item.setStyleSheet("QLabel { background-color: rgba(0, 0, 0, 0); color: white;}")
-                arial.setPixelSize(int(20 * self.view.ratio))
-                item.setFont(arial)
             case 1:
-                arial.setPixelSize(int(20 * self.view.ratio))
                 coin_name_widget = layout.itemAt(1).widget()
-                coin_name_widget.setFont(arial)
+                coin_name_widget.setFont(self.arial)
                 coin_symbol_widget = layout.itemAt(2).widget()
-                coin_symbol_widget.setFont(arial)
+                coin_symbol_widget.setFont(self.arial)
                 coin_name_widget.setStyleSheet("QLabel { background-color : rgba(0, 0, 0, 0); color : white;}")
                 coin_symbol_widget.setStyleSheet("QLabel { background-color : rgba(0, 0, 0, 0); font-size: " + str(int(16 * self.view.ratio)) + "px; color : #778899;}")
             case 2:
-                arial.setPixelSize(int(20 * self.view.ratio))
                 item.setStyleSheet("QLabel { background-color : rgba(0, 0, 0, 0); color : white;}")
-                item.setFont(arial)
             case 3:
                 item.setStyleSheet("QLabel { background-color : rgba(0, 0, 0, 0); color : #F0302C;}")
-                arial.setPixelSize(int(20 * self.view.ratio))
-                item.setFont(arial)
             case 4:
                 item.setStyleSheet("QLabel { background-color : rgba(0, 0, 0, 0); color : #F0302C;}")
-                arial.setPixelSize(int(20 * self.view.ratio))
-                item.setFont(arial)
             case 5:
                 item.setStyleSheet("QLabel { background-color : rgba(0, 0, 0, 0); color : #54EE1F;}")
-                arial.setPixelSize(int(20 * self.view.ratio))
-                item.setFont(arial)
             case 6:
                 item.setStyleSheet("QLabel { background-color : rgba(0, 0, 0, 0); color : #CBD0DE;}")
-                arial.setPixelSize(int(20 * self.view.ratio))
-                item.setFont(arial)
             case _:
                 item.setStyleSheet("QLabel { background-color : rgba(0, 0, 0, 0); color : #CBD0DE;}")
-                arial.setPixelSize(int(20 * self.view.ratio))
-                item.setFont(arial)
         
         self.view.master_table_widget.setCellWidget(row, column, item)   
 
     def onMasterTableScroll(self, *args):
         rect = self.view.master_table_widget.viewport().rect()
         top_index = self.view.master_table_widget.indexAt(rect.topLeft()).row()
-        # self.table_size == 200 potem 300
-        hundreds = top_index // 100
-        print(hundreds, self.pages)
-        if top_index % 100 > 73 and hundreds + 2 == self.pages:
-            print(not self.isPageLoaded.get(self.table_size // 100 + 1, None))
-            if not self.isPageLoaded.get(self.table_size // 100 + 1, None):
-                print(self.table_size // 100)
-                
-                self.isPageLoaded[self.table_size // 100] = True
-                self.isPageLoaded[self.table_size // 100 - 1] = False
-                print('hund', hundreds)
-                print(self.pages)
-                self.loadPage()
-                if hundreds != 0:
-                    self.unloadPage(top_index)
-                else:
-                    self.pages += 1
-                self.view.master_table_widget.update()
+        print(top_index)
+        if top_index >= (250 * self.loads - 50) and self.readyToScroll:
+            self.readyToScroll = False
+            self.loadPage(250 * self.loads)
+            self.readyToScroll = True
+            # self.unloadPage(top_index)
+        # elif top_index <= 50 and self.readyToScroll:
+        #     self.readyToScroll = False
+        #     # self.loadPage(100 * (self.loads -)
+        #     self.unloadPage(top_index)
+        #     self.readyToScroll = True
+            
+
+
+
+    # def unloadPage(self, top_index):
+    #     self.loads -= 1
+    #     for _ in range(100):
+    #         self.view.master_table_widget.removeRow(0)
+    #     self.view.master_table_widget.verticalScrollBar().setValue(top_index - 100)
         
 
-
-    def unloadPage(self, topIndex):
-        for i in reversed(range(100)):
-            self.view.master_table_widget.removeRow(i)
-        self.isPageLoaded[(self.table_size // 100) - 2] = False
-        self.view.master_table_widget.verticalScrollBar().setValue(topIndex - 100)
-
-    def loadPage(self):
-        print(self.table_size)
-        size = self.table_size
-        for i in range(100):
-            self.addRow(int(size + i + 1), './resources/logo.png', 'Bitcoin', 'BTC', '$26,961.43', '-0.1%', '-2.6%', '+2.4%', '$16,332,763,917', '$522,840,485,971')
-        
+    def loadPage(self, offset=0):
+        self.loads += 1
+        print(offset)
+        coins: list[ListedCoinObject] = self.api.fetchNewListedCoins(offset // 250)
+        if coins != None:
+            print(len(coins))
+            for i in range(250):
+                # self.addRow(i + offset, int(self.row_count + 1), './resources/logo.png', 'Bitcoin', 'BTC', '$26,961.43', '-0.1%', '-2.6%', '+2.4%', '$16,332,763,917', '$522,840,485,971')
+                self.addRow(i + offset, coins[i + offset].market_cap_rank, coins[i + offset].image, coins[i + offset].name, 
+                        coins[i + offset].symbol, coins[i + offset].current_price, coins[i + offset].price_change_percentage_1h_in_currency,
+                          coins[i + offset].price_change_percentage_24h_in_currency, coins[i + offset].price_change_percentage_7d_in_currency, 
+                          coins[i + offset].total_volume, coins[i + offset].market_cap)
+        else:
+            print('Cannot load data')
 
     def setMarketCapSuffixLabel(self, value, change):
         if change >= 0:

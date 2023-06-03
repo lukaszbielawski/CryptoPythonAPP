@@ -61,7 +61,7 @@ font-size: 20px;</string>
      <number>20</number>
     </property>
     <item>
-     <layout class="QHBoxLayout" name="tooltip_layout" stretch="0,0,0,0">
+     <layout class="QHBoxLayout" name="tooltip_layout" stretch="0,0,0,0,0">
       <property name="spacing">
        <number>20</number>
       </property>
@@ -120,6 +120,9 @@ font-size: 32px;</string>
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="lineEdit"/>
       </item>
      </layout>
     </item>

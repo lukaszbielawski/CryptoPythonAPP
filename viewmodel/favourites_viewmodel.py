@@ -4,8 +4,10 @@ from PyQt5.QtGui import QBrush, QColor, QFont
 from PyQt5.QtCore import Qt
 from view.view import View
 from viewmodel.details_viewmodel import DetailsViewModel
+from model.APIFetcher import APIFetcher
+
 class FavouritesViewModel():
-    def __init__(self, view: View, main_vm):
+    def __init__(self, view: View, main_vm, api: APIFetcher):
         print('fav init')
         self.view = view
         self.main_vm = main_vm

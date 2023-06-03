@@ -8,9 +8,10 @@ import numpy as np
 from matplotlib.figure import Figure
 import matplotlib.figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
+from model.APIFetcher import APIFetcher
 
 class DetailsViewModel():
-    def __init__(self, view: view.View):
+    def __init__(self, view: view.View, api: APIFetcher):
         self.view = view
         self.isFavourite = False
         self.plusButtonState = 0
