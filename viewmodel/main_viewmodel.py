@@ -18,6 +18,7 @@ class MainViewModel():
     def __init__(self, view, api: APIFetcher):
         self.view = view
         self.toUpdate = True
+        self.api = api
         self.master_viewmodel = master_vm.MasterViewModel(self.view, self, api) #default view
         self.favourites_viewmodel = favourites_vm.FavouritesViewModel(self.view, self, api)
         self.portfolio_viewmodel = portfolio_vm.PortfolioViewModel(self.view, self, api)
