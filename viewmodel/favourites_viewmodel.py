@@ -5,15 +5,20 @@ from PyQt5.QtCore import Qt
 from view.view import View
 from viewmodel.details_viewmodel import DetailsViewModel
 from model.APIFetcher import APIFetcher
+from resources.Constants import ViewModel
 
 class FavouritesViewModel():
     def __init__(self, view: View, main_vm, api: APIFetcher):
         print('fav init')
         self.view = view
         self.main_vm = main_vm
+        self.view.favourites_table.setRowCount(self.number_of_coins)
+        api.fetchListedCoinObjects(ViewModel.FAVOURITES)
         self.number_of_coins = 0
         self.__cfgTable()
-        self.view.favourites_table.setRowCount(self.number_of_coins)
+        
+
+
         self.addRow('1', './resources/logo.png', 'Bitcoin', 'BTC', '$26,961.43', '-0.1%', '-2.6%', '+2.4%', '$16,332,763,917', '$522,840,485,971')
         self.addRow('2', './resources/logo.png', 'Bitcoin', 'BTC', '$26,961.43', '-0.1%', '-2.6%', '+2.4%', '$16,332,763,917', '$522,840,485,971')
 
@@ -139,7 +144,7 @@ class FavouritesViewModel():
         self.view.favourites_number_of_favourite_coins_value.setText(str(self.number_of_coins))
 
     def getClickedRow(self, row, column):
-        self.main_vm.detailsRequest()
+        self.main_vm.detailsRequest('bitcoin')
         print(row)
 
 

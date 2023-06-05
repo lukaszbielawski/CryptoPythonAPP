@@ -346,9 +346,9 @@ class View(object):
         self.details_coin_logo_label = QtWidgets.QLabel(self.layoutWidget2)
         self.details_coin_logo_label.setMinimumSize(QtCore.QSize(int(50 * self.ratio), int(50 * self.ratio)))
         self.details_coin_logo_label.setMaximumSize(QtCore.QSize(int(50 * self.ratio), int(50 * self.ratio)))
-        self.details_coin_logo_label.setStyleSheet("border-image: url(./resources/logo.png);\n"
-"border-radius: 50%;\n"
-"background: rgba(0, 0, 0, 0);")
+#         self.details_coin_logo_label.setStyleSheet("border-image: url(./resources/logo.png);\n"
+# "border-radius: 50%;\n"
+# "background: rgba(0, 0, 0, 0);")
         self.details_coin_logo_label.setText("")
         self.details_coin_logo_label.setObjectName("details_coin_logo_label")
         self.details_coin_id_layout.addWidget(self.details_coin_logo_label)
@@ -647,6 +647,8 @@ class View(object):
         # self.matplotlib_widget.setMaximumSize(QtCore.QSize(0, int(500 * self.ratio)))
         # self.matplotlib_widget.setStyleSheet("background: rgb(85, 0, 0)")
         self.matplotlib_widget.setObjectName("matplotlib_widget")
+        self.plot_container_layout = QtWidgets.QVBoxLayout()
+        self.matplotlib_widget.setLayout(self.plot_container_layout)
         self.details_layout.addWidget(self.matplotlib_widget)
         self.time_change_table = QtWidgets.QTableWidget(self.layoutWidget2)
         self.time_change_table.setContentsMargins(0, 0, 0, 0)

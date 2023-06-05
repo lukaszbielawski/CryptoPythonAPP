@@ -22,6 +22,7 @@ class MainViewModel():
         self.master_viewmodel = master_vm.MasterViewModel(self.view, self, api) #default view
         self.favourites_viewmodel = favourites_vm.FavouritesViewModel(self.view, self, api)
         self.portfolio_viewmodel = portfolio_vm.PortfolioViewModel(self.view, self, api)
+        self.details_viewmodel = None
         self.__connectButtons()
         
     def __connectButtons(self):
@@ -47,6 +48,9 @@ class MainViewModel():
     def searchButtonClicked(self):
         print(self.view.tooltip_search_text.text())
 
-    def detailsRequest(self):
-        self.details_viewmodel = details_vm.DetailsViewModel(self.view, self.api)
+    def detailsRequest(self, coin_id):
+        plot = self.view.plot_container_layout.itemAt(0)
+        if plot is not None:
+            plot.widget().setParent(None)
+        self.details_viewmodel = details_vm.DetailsViewModel(self.view, self.api, coin_id)
         self.view.stackedWidget.setCurrentIndex(1)

@@ -151,7 +151,7 @@ class PortfolioViewModel():
         self.view.portfolio_number_of_coins_widgetvalue.setText(str(self.table_size))
 
     def getClickedRow(self, row, column):
-        self.main_vm.detailsRequest()
+        self.main_vm.detailsRequest('bitcoin')
         print(row)
         # return row  
 

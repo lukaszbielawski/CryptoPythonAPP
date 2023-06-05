@@ -23,7 +23,7 @@ class Application(QApplication):
         sys.exit(self.exec_())
 
 if __name__ == '__main__':
-    ratio = 3
+    ratio = 1
     app = Application(sys.argv, ratio)
    
     
