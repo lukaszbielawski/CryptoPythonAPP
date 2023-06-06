@@ -15,13 +15,15 @@ import viewmodel.portfolio_viewmodel as portfolio_vm
 from model.APIFetcher import APIFetcher
 
 class MainViewModel():
-    def __init__(self, view, api: APIFetcher):
+    def __init__(self, view: View, api: APIFetcher):
         self.view = view
-        self.toUpdate = True
-        self.api = api
-        self.master_viewmodel = master_vm.MasterViewModel(self.view, self, api) #default view
-        self.favourites_viewmodel = favourites_vm.FavouritesViewModel(self.view, self, api)
-        self.portfolio_viewmodel = portfolio_vm.PortfolioViewModel(self.view, self, api)
+        self.toUpdate = False
+        self.api = api  # (self, ratio: float, main_vm, api: APIFetcher, table_widget: QTableWidget):
+        self.master_viewmodel = master_vm.MasterViewModel(self.view, self, api, self.view.master_table_widget) #default view
+        # self.favourites_viewmodel = favourites_vm.FavouritesViewModel(self.view, self, api, self.view.favourites_table)
+        # self.portfolio_viewmodel = portfolio_vm.PortfolioViewModel(self.view, self, api, self.view.portfolio_table_widget)
+        self.favourites_viewmodel = None
+        self.portfolio_viewmodel = None
         self.details_viewmodel = None
         self.__connectButtons()
         
@@ -36,13 +38,17 @@ class MainViewModel():
         self.view.stackedWidget.setCurrentIndex(0)
 
     def favouritesButtonClicked(self):
+        if self.favourites_viewmodel is None:
+            self.favourites_viewmodel = favourites_vm.FavouritesViewModel(self.view, self, self.api, self.view.favourites_table)
         if self.toUpdate:
-            self.favourites_viewmodel = favourites_vm.FavouritesViewModel(self.view, self, self.api)
+            self.favourites_viewmodel.loadFavourites()
         self.view.stackedWidget.setCurrentIndex(2)
 
     def myPortfolioButtonClicked(self):
+        if self.portfolio_viewmodel is None:
+            self.portfolio_viewmodel = portfolio_vm.PortfolioViewModel(self.view, self, self.api, self.view.portfolio_table_widget)
         if self.toUpdate:
-            self.portfolio_viewmodel = portfolio_vm.PortfolioViewModel(self.view, self, self.api)
+            self.portfolio_viewmodel.loadPortfolio()
         self.view.stackedWidget.setCurrentIndex(3)
 
     def searchButtonClicked(self):

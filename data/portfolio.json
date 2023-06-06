@@ -1,0 +1,16 @@
+{
+  "coins": {
+      "secret": {
+         "amount": 5,
+         "price": 2.25
+      },
+     "bitcoin":{
+        "amount": 1,
+         "price": 27000
+      },
+      "tether":{
+        "amount": 31.35,
+         "price": 1.11
+      }
+  }
+}

@@ -1,5 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QTableWidgetItem, QAbstractItemView, QHeaderView, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QTableWidgetItem, QAbstractItemView, QHeaderView, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy, QTableWidget
 from PyQt5.QtGui import QBrush, QColor, QFont
 from PyQt5.QtCore import Qt
 import view.view as view
@@ -11,28 +11,18 @@ import urllib.request
 from urllib.request import Request
 import PIL, math
 from resources.Constants import Color, ViewModel
-from viewmodel.abstract_viewmodel import ListedViewModel
+from viewmodel.listed_viewmodel import ListedViewModel
 
 class MasterViewModel(ListedViewModel):
-    def __init__(self, view: view.View, main_vm, api: APIFetcher):
+    def __init__(self, ratio: float, main_vm, api: APIFetcher, table_widget: QTableWidget):
+        super().__init__(ratio, main_vm, api, table_widget)
         print('master init')
-        self.view = view
-        self.main_vm = main_vm
-        self.api = api
-        self.row_count = 0
+        self.table_widget.verticalScrollBar().valueChanged.connect(self.onMasterTableScroll)
         self.readyToScroll = True
         self.already_loaded = 0
         self.per_page = 40
-        # self.setMarketCapSuffixLabel(1.21, -7.0)
-        # self.setMarketCapWidgetValue('$931,333,754,362')
-        # self.setTradingVolumeWidgetValue('$31,333,754,362')
-        # self.setBtcDominanceWidgetValue('43.5%')
-        # self.setNumberOfCoinsValue(500)
-        self.__initFont()
-        self.__cfgTable()
         self.loadGlobalStats()
         self.loadPage()
-        # self.loadPage(100)
 
     def onMasterTableScroll(self, *args):
         rect = self.view.master_table_widget.viewport().rect()
@@ -74,7 +64,7 @@ class MasterViewModel(ListedViewModel):
                           coins[self.already_loaded + i].total_volume, coins[self.already_loaded + i].market_cap)
             self.already_loaded += self.per_page
         except Exception as e:
-            print(e)
+            print(e, 'zzz')
 
     def loadGlobalStats(self):
         global_data = self.api.global_data
@@ -129,6 +119,5 @@ class MasterViewModel(ListedViewModel):
 
     def getClickedRow(self, row, column):
         self.main_vm.detailsRequest(self.api.master_coins_array[row].id)
-        print(row) 
 
 

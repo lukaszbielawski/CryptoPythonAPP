@@ -11,9 +11,16 @@ class Color(Enum):
     TRANSPARENT = 'rgba(0, 0, 0, 0)'
 
 class ViewModel(Enum):
-    MASTER = 1
-    FAVOURITES = 2
-    PORTFOLIO = 3
+    MASTER = ''
+    FAVOURITES = './data/favourites.json'
+    PORTFOLIO = './data/portfolio.json'
 
-favourites_path = './data/favourites.json'
-portfolio_path = './data/favourites.json'
+class DetailsStarButton(Enum):
+    FILL = True
+    EMPTY = False
+
+class DetailsPortfolioButton(Enum):
+    FILL = 0
+    EMPTY = 1
+    TRASH = 2
+

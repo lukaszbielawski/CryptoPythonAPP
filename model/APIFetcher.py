@@ -32,15 +32,16 @@ class APIFetcher():
                 self.__coins_loaded += len(new_list)
                 return new_list
             except Exception as e:
-                print(e)
+                
+                print(e, 'zzzzz')
         elif for_viewmodel == Constants.ViewModel.FAVOURITES:
             try:
-                self.favourites_coins_array = self.__createListedCoinObjects(jsonData=self.__requestSpecificCoinsJSON(Constants.favourites_path))
+                self.favourites_coins_array = self.__createListedCoinObjects(jsonData=self.__requestSpecificCoinsJSON(Constants.ViewModel.FAVOURITES))
             except Exception as e:
                 print(e)
         else:
             try:
-                self.portfolio_coins_array = self.__createListedCoinObjects(jsonData=self.__requestSpecificCoinsJSON(Constants.portfolio_path))
+                self.portfolio_coins_array = self.__createListedCoinObjects(jsonData=self.__requestSpecificCoinsJSON(Constants.ViewModel.PORTFOLIO))
             except Exception as e:
                 print(e)
     
@@ -58,9 +59,20 @@ class APIFetcher():
 
 
 
-    def __requestSpecificCoinsJSON(self, list_of_coins):
+    def __requestSpecificCoinsJSON(self, for_viewmodel):
+        if for_viewmodel == Constants.ViewModel.FAVOURITES:
+            with open(Constants.ViewModel.FAVOURITES.value, 'r') as json_file:
+                print(json_file)
+                coin_list = json.load(json_file)['coins']
+        else:
+             print('xd')
+             with open(Constants.ViewModel.PORTFOLIO.value, 'r') as json_file:
+                coins = json.load(json_file)['coins']
+                print('PFP',json_file)
+                print(coins)
+                coin_list = coins.keys()
         response_API = requests.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=' 
-                     + '%2C'.join(list_of_coins) +'&order=market_cap_desc&per_page=250&page=1&sparkline=false&price_change_percentage=1h%2C24h%2C7d')
+                     + '%2C'.join(coin_list) +'&order=market_cap_desc&per_page=250&page=1&sparkline=false&price_change_percentage=1h%2C24h%2C7d')
         data = response_API.text
         return json.loads(data)
     
@@ -78,6 +90,7 @@ class APIFetcher():
     def __requestPageJSON(self):
         response_API = requests.get(f'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page={self.__page}&sparkline=false&price_change_percentage=1h%2C24h%2C7d&locale=en&precision=full')
         data = response_API.text
+
         # print(data)
         return json.loads(data)
     

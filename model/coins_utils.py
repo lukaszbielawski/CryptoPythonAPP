@@ -34,6 +34,7 @@ class CoinDetailsObject():
         self.image = image
         self.name = name
         self.symbol = symbol.upper()
+
         self.current_price = format_currency(current_price)
         self.market_cap = market_cap
         self.total_volume = total_volume
@@ -70,13 +71,13 @@ class CoinLogoWidget(QLabel):
 
 def download_and_cache_coin_image(coin_id, imagePath, ratio, size):
     try:
-        if not os.path.exists(f'./cache/{coin_id}_{int(ratio * size)}_.png'):
+        if not os.path.exists(f'./cache/{coin_id}_{int(ratio * size)}.png'):
             url = imagePath
             request_site = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
             data = urllib.request.urlopen(request_site)
             image = PIL.Image.open(data)
             smaller_image = image.resize((int(size * ratio), int(size * ratio)), PIL.Image.ANTIALIAS)
-            smaller_image.save(f'./cache/{coin_id}_{int(ratio * size)}.png' )
+            smaller_image.save(f'./cache/{coin_id}_{int(ratio * size)}.png')
         return QtGui.QPixmap(f'./cache/{coin_id}_{int(ratio * size)}.png')
     except Exception as e:
         print(e)

@@ -1,7 +1,6 @@
 {
-    "favourite_coins_list": [
+    "coins": [
       "bitcoin",
       "tether"
-    ],
-    "number_of_favourite_coins": 2
+    ]
 }

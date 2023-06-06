@@ -9,23 +9,46 @@ import pandas as pd
 from datetime import datetime, timedelta
 import matplotlib.dates as mdates
 from matplotlib.figure import Figure
-import matplotlib.figure
+import matplotlib.figure, json
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from model.APIFetcher import APIFetcher
 from model.coins_utils import CoinDetailsObject, CoinLogoWidget, download_and_cache_coin_image
-from resources.Constants import Color
+from resources.Constants import Color, ViewModel, DetailsStarButton,  DetailsPortfolioButton
 
 class DetailsViewModel():
     def __init__(self, view: view.View, api: APIFetcher, coin_id):
         self.view = view
-        self.isFavourite = False
         self.plusButtonState = 0
         self.coin_id = coin_id
         self.coin_details = api.fetchCoinDetails(coin_id)
+        self.changed = False
         self.__cfgButtons()
-        self.__cfgTimeChangeTable()
-       
+        self.__setDetails()
         
+
+        
+    def __cfgButtons(self):
+        with open(ViewModel.FAVOURITES.value, 'r') as favourites_file:
+            favourites_json = json.load(favourites_file)
+            self.isFavourite = self.coin_id in favourites_json['coins']
+
+        with open(ViewModel.PORTFOLIO.value, 'r') as portfolio_file:
+            portfolio_json = json.load(portfolio_file)
+            self.isInPortfolio = self.coin_id in portfolio_json['coins'].keys()
+
+        self.__hidePortfolioForm()
+
+        self.__setDetailsPortfolioButton(DetailsPortfolioButton.TRASH if self.isInPortfolio else DetailsPortfolioButton.FILL)
+        self.__setDetailsStarButton(DetailsStarButton.FILL if self.isFavourite else DetailsStarButton.EMPTY)
+
+
+        print(self.isFavourite, self.isInPortfolio)
+        
+        self.view.details_star_button.clicked.connect(self.clickedFavouriteButton)
+        self.view.details_plus_button.clicked.connect(self.clickedPlusButton)
+        self.view.details_portfolio_tick_button.clicked.connect(self.clickedTickButton)
+       
+    def __setDetails(self):
         self.setRank(self.coin_details.market_cap_rank)
 
         self.setDetailsCoinID(self.coin_details.id, self.coin_details.image, self.coin_details.name, self.coin_details.symbol)
@@ -38,25 +61,10 @@ class DetailsViewModel():
         self.setDetailsCirculatingSupplyWidget(self.coin_details.circulating_supply)
         self.setDetailsAllTimeHighWidget(self.coin_details.ath)
         self.setDetailsAllTimeLowWidget(self.coin_details.atl)
-        print(self.coin_details.sparkline)
+
         self.plot_container_layout = self.__cfgPlot(self.coin_details.sparkline, self.coin_details.last_updated)
         self.setTimeChangeTableValues(self.coin_details.price_change_percentage_1h, self.coin_details.price_change_percentage_24h, self.coin_details.price_change_percentage_7d,
                                   self.coin_details.price_change_percentage_14d, self.coin_details.price_change_percentage_30d, self.coin_details.price_change_percentage_1y)
-
-    def __cfgButtons(self):
-        self.view.pushButton.clicked.connect(self.clickedFavouriteButton)
-        self.view.pushButton_2.clicked.connect(self.clickedPlusButton)
-        self.view.details_portfolio_tick_button.clicked.connect(self.clickedTickButton)
-
-
-
-    # global_data = self.api.global_data
-    #     self.setMarketCapSuffixLabel(int(global_data.total_market_cap), global_data.market_cap_change_percentage_24h)
-    #     self.setMarketCapWidgetValue('${:,}'.format(int(global_data.total_market_cap)))
-    #     self.setTradingVolumeWidgetValue('${:,}'.format(int(global_data.total_volume)))
-    #     self.setBtcDominanceWidgetValue(str(self.__format_percentage(global_data.btc_dominance)) + '%')
-    #     self.setNumberOfCoinsValue('{:,}'.format(global_data.active_cryptocurrencies))
-
 
 
     def setRank(self, value):
@@ -64,14 +72,9 @@ class DetailsViewModel():
     
     def setDetailsCoinID(self, coin_id, coin_logo, coin_name, coin_symbol):
         pixmap = download_and_cache_coin_image(coin_id, coin_logo, ratio=self.view.ratio, size=50)
-        # self.view.details_coin_logo_label.setStyleSheet(f"border-image: url({.});\nborder-radius: 50%;\nbackground: " + Color.TRANSPARENT.value + ";")
         self.view.details_coin_logo_label.setPixmap(pixmap)
         self.view.details_coin_name_label.setText(coin_name)
         self.view.details_coin_symbol_label.setText(coin_symbol)
-
-
-# self.addItemAt(index, 2, QLabel('${:,f}'.format(price)))
-#         self.addItemAt(index, 3, QLabel(str(one_hour) +'%'), value=one_hour)
 
     def setDetailsCoinPriceWidget(self, value):
         self.view.details_coin_price_label.setText('${:,f}'.format(value))
@@ -100,25 +103,24 @@ class DetailsViewModel():
 
 
     def clickedFavouriteButton(self):
+        self.changed = True
         if self.isFavourite:
-            self.view.pushButton.setStyleSheet("border-image: url(./resources/star_empty.png);\nbackground: " + Color.TRANSPARENT.value + ";")
+            self.__setDetailsStarButton(DetailsStarButton.EMPTY)
             self.isFavourite = False
         else:
-            self.view.pushButton.setStyleSheet("border-image: url(./resources/star_fill.png);\nbackground: " + Color.TRANSPARENT.value + ";")
+            self.__setDetailsStarButton(DetailsStarButton.FILL)
             self.isFavourite = True
         
     def clickedPlusButton(self):
         if self.plusButtonState == 2:
-            self.view.pushButton_2.setStyleSheet("border-image: url(./resources/plus_fill.png);\nbackground: " + Color.TRANSPARENT.value + ";")
-            self.plusButtonState = 0
+            self.changed = True
+            self.__setDetailsPortfolioButton(DetailsPortfolioButton.FILL)
         elif self.plusButtonState == 0:
             self.__showPortfolioForm()
-            self.view.pushButton_2.setStyleSheet("border-image: url(./resources/plus_empty.png);\nbackground: " + Color.TRANSPARENT.value + ";")
-            self.plusButtonState = 1
+            self.__setDetailsPortfolioButton(DetailsPortfolioButton.EMPTY)
         else:
             self.__hidePortfolioForm()
-            self.view.pushButton_2.setStyleSheet("border-image: url(./resources/plus_fill.png);\nbackground: " + Color.TRANSPARENT.value + ";")
-            self.plusButtonState = 0
+            self.__setDetailsPortfolioButton(DetailsPortfolioButton.FILL)
     
     def clickedTickButton(self):
         try:
@@ -129,13 +131,32 @@ class DetailsViewModel():
             self.view.details_portfolio_bought_amount_label.setText('Bought amount')
             self.view.details_portfolio_price_label.setText('Price')
             self.__hidePortfolioForm()
-            print(amount, price)
-            self.view.pushButton_2.setStyleSheet("border-image: url(./resources/trash_bin.png);\nbackground: " + Color.TRANSPARENT.value + ";")
-            self.plusButtonState = 2
+
+            # print(amount, price)
+            self.changed = True
+            self.__setDetailsPortfolioButton(DetailsPortfolioButton.TRASH)
+            self.__addPortfolioEntry(amount, price)
+
+            
         except Exception as e:
             self.view.details_portfolio_bought_amount_label.setText(f'<font color={Color.RED.value}>Bought amount</font>')
             self.view.details_portfolio_price_label.setText(f'<font color={Color.RED.value}>Price</font>')
             print(e)
+    
+    def __setDetailsStarButton(self, state):
+        if state == DetailsStarButton.FILL:
+            self.view.details_star_button.setStyleSheet("border-image: url(./resources/star_fill.png);\nbackground: " + Color.TRANSPARENT.value + ";")
+        else:
+            self.view.details_star_button.setStyleSheet("border-image: url(./resources/star_empty.png);\nbackground: " + Color.TRANSPARENT.value + ";")
+
+    def __setDetailsPortfolioButton(self, state):
+        if state == DetailsPortfolioButton.FILL:
+            self.view.details_plus_button.setStyleSheet("border-image: url(./resources/plus_fill.png);\nbackground: " + Color.TRANSPARENT.value + ";")
+        elif state == DetailsPortfolioButton.EMPTY:
+            self.view.details_plus_button.setStyleSheet("border-image: url(./resources/plus_empty.png);\nbackground: " + Color.TRANSPARENT.value + ";")
+        else:
+            self.view.details_plus_button.setStyleSheet("border-image: url(./resources/trash_bin.png);\nbackground: " + Color.TRANSPARENT.value + ";")
+        self.plusButtonState = state.value
 
     def __hidePortfolioForm(self):
         self.view.details_portfolio_bought_amount_label.hide()
@@ -192,19 +213,12 @@ class DetailsViewModel():
 
                 plt.rcParams['axes.xmargin'] = 0
 
-
-
-
-
-                # x = np.linspace(0, L)
-                # ncolors = len(plt.rcParams['axes.prop_cycle'])
-                # shift = np.linspace(0, L, ncolors, endpoint=False)
                 self.ax = self.figure.add_subplot(111)
                 self.ax.set_facecolor(Color.BLACK.value)
                 for spine in self.ax.spines.values():
                     spine.set_color(Color.WHITE.value)
                 self.ax.tick_params(colors=Color.WHITE.value, labelsize=(14 * self.parent.view.ratio))
-                # for s in shift:
+
                 if sparkline[0] > sparkline[-1]:
                     plot_color = Color.RED.value
                 elif sparkline[0] < sparkline[-1]:
@@ -216,14 +230,15 @@ class DetailsViewModel():
 
         
         self.view.plot_container_layout.addWidget(MplCanvas(self))
-    
-    def __cfgTimeChangeTable(self):
-        self.view.time_change_table
-        self.view.time_change_table.setRowCount(1)
-        self.view.time_change_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.view.time_change_table.setFocusPolicy(Qt.NoFocus)
-        self.view.time_change_table.setSelectionMode(QAbstractItemView.NoSelection)       
-        self.view.time_change_table.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.view.time_change_table.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.view.time_change_table.horizontalHeader().setSectionResizeMode(QHeaderView.Fixed)
-        self.view.time_change_table.verticalHeader().setSectionResizeMode(QHeaderView.Fixed)
+
+    def __addPortfolioEntry(self, amount, price):
+        pass
+
+    def __addFavouritesEntry(self, amount, price):
+        pass
+
+    def __removeFavouritesEntry(self):
+        pass
+
+    def __removePortfolioEntry(self):
+        pass
