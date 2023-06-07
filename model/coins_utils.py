@@ -1,4 +1,4 @@
-import string, decimal, datetime
+import string, decimal, datetime, math
 import numpy as np
 import urllib
 from urllib.request import Request
@@ -17,10 +17,10 @@ class ListedCoinObject():
         self.image = image
         self.name = name
         self.symbol = symbol.upper()
-        self.current_price = format_currency(current_price)
-        self.price_change_percentage_1h_in_currency = format_percentage(price_change_percentage_1h_in_currency)
-        self.price_change_percentage_24h_in_currency = format_percentage(price_change_percentage_24h_in_currency)
-        self.price_change_percentage_7d_in_currency = format_percentage(price_change_percentage_7d_in_currency)
+        self.current_price = current_price
+        self.price_change_percentage_1h_in_currency = price_change_percentage_1h_in_currency
+        self.price_change_percentage_24h_in_currency = price_change_percentage_24h_in_currency
+        self.price_change_percentage_7d_in_currency = price_change_percentage_7d_in_currency
         self.total_volume = total_volume
         self.market_cap = market_cap
 
@@ -35,19 +35,19 @@ class CoinDetailsObject():
         self.name = name
         self.symbol = symbol.upper()
 
-        self.current_price = format_currency(current_price)
+        self.current_price = current_price
         self.market_cap = market_cap
         self.total_volume = total_volume
         self.circulating_supply = circulating_supply
-        self.ath = format_currency(ath)
-        self.atl = format_currency(atl)
+        self.ath = ath
+        self.atl = atl
         
-        self.price_change_percentage_1h = format_percentage(price_change_percentage_1h)
-        self.price_change_percentage_24h  = format_percentage(price_change_percentage_24h)
-        self.price_change_percentage_7d = format_percentage(price_change_percentage_7d)
-        self.price_change_percentage_14d = format_percentage(price_change_percentage_14d)
-        self.price_change_percentage_30d = format_percentage(price_change_percentage_30d)
-        self.price_change_percentage_1y = format_percentage(price_change_percentage_1y)
+        self.price_change_percentage_1h = price_change_percentage_1h
+        self.price_change_percentage_24h  = price_change_percentage_24h
+        self.price_change_percentage_7d = price_change_percentage_7d
+        self.price_change_percentage_14d = price_change_percentage_14d
+        self.price_change_percentage_30d = price_change_percentage_30d
+        self.price_change_percentage_1y = price_change_percentage_1y
         self.sparkline = sparkline
         self.last_updated = datetime.datetime.strptime(last_updated, "%Y-%m-%dT%H:%M:%S.%fZ")
         
@@ -82,25 +82,53 @@ def download_and_cache_coin_image(coin_id, imagePath, ratio, size):
     except Exception as e:
         print(e)
         return QtGui.QPixmap(f'./cache/bitcoin_{int(ratio * size)}.png')
-
-def format_currency(currency, precission = 3):
-    try:
-        # sci_currency = "{:.3e}".format(currency)
-        sci_currency = f"{{:.{precission}e}}".format(currency)
-        number = decimal.Decimal(sci_currency)
-        return number
-    except Exception as e:
-        # print(e)
-        return 0.0
         
 def format_percentage(percent):
     try:
-        return round(percent, 1)
+        return f'{round(percent, 1)}%'
     except Exception as e:
-        # print(e)
         return '—'
     
+def format_price(price):
+    if price >= 1.0:
+        return '${:,.2f}'.format(price)
+    elif price <= -1.0:
+        return '-${:,.2f}'.format(abs(price))
+    elif price > 0.0:
+        zeros = abs(math.ceil(math.log10(price)))
+        return f'${{:.{zeros + 4}f}}'.format(price)
+    elif price < 0.0:
+        zeros = abs(math.ceil(math.log10(abs(price))))
+        return f'-${{:.{zeros + 4}f}}'.format(abs(price))
+    else:
+        return '$0.00'
+
+def format_big_price(price):
+    return '${:,}'.format(int(price))
+
+def format_number(number):
+    return '{:,}'.format(number)
+
+def convert_number_to_written(number):
+    digits = int(math.log10(number))
+    number = str(number)
     
-    
+    if digits in {9, 10, 11}:
+        name = ' Billion'
+        string = number[:digits - 7]
+        string_with_dot = string[:digits - 8] + '.' + string[digits - 8:]
+    else:
+        string = number[:digits - 10]
+        string_with_dot = string[:digits - 11] + '.' + string[digits - 11:]
+        name = ' Trillion'
+    return string_with_dot + name
+
+if __name__ == '__main__':
+    pass
+    # format_price(26810.51017546782)# == 26810.51
+    # format_price(0.00000734921408550618) #== 0.000007349
+    # format_price(0.088613213534) #== 0.08861
+
+
                
           

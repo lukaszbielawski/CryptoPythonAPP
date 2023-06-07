@@ -13,25 +13,37 @@ class FavouritesViewModel(ListedViewModel):
         print('fav init')
         self.api = api
         self.loadFavourites()
-        self.setNumberOfFavouriteCoinsValue()
+        
 
     def loadFavourites(self):
+        if len(self.api.getSpecificCoinsID(ViewModel.FAVOURITES)) == 0: return
         self.api.fetchListedCoinObjects(ViewModel.FAVOURITES)
         coins = self.api.favourites_coins_array
+        print('load ', len(coins))
         try:
             for i in range(len(coins)):
                 self.addRow(i, coins[i].id, coins[i].market_cap_rank, coins[i].image, coins[i].name, 
                         coins[i].symbol, coins[i].current_price, coins[i].price_change_percentage_1h_in_currency,
                           coins[i].price_change_percentage_24h_in_currency, coins[i].price_change_percentage_7d_in_currency, 
                           coins[i].total_volume, coins[i].market_cap)
+                print('crnt fav', self.table_widget.rowCount())
         except Exception as e:
             print(e)
+        print('after fav', self.table_widget.rowCount())
+        self.setNumberOfFavouriteCoinsValue(len(self.api.favourites_coins_array))
 
 
-    def setNumberOfFavouriteCoinsValue(self):
-        self.view.favourites_number_of_favourite_coins_value.setText(str(len(self.api.favourites_coins_array)))
+    def setNumberOfFavouriteCoinsValue(self, number):
+        self.view.favourites_number_of_favourite_coins_value.setText(str(number))
 
     def getClickedRow(self, row, column):
         self.main_vm.detailsRequest(self.api.favourites_coins_array[row].id)
+
+    def clearView(self):
+        self.row_count = 0
+        self.table_widget.setRowCount(0)
+        self.setNumberOfFavouriteCoinsValue(0)
+        print('clear fav', self.table_widget.rowCount())
+        
     
 

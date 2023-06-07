@@ -1,6 +1,6 @@
 {
     "coins": [
-      "bitcoin",
-      "tether"
+        "dai",
+        "adventure-gold"
     ]
 }

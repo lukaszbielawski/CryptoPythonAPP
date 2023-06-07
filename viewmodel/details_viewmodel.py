@@ -7,20 +7,23 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
+import math
 import matplotlib.dates as mdates
 from matplotlib.figure import Figure
 import matplotlib.figure, json
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from model.APIFetcher import APIFetcher
-from model.coins_utils import CoinDetailsObject, CoinLogoWidget, download_and_cache_coin_image
+import model.coins_utils as utils
 from resources.Constants import Color, ViewModel, DetailsStarButton,  DetailsPortfolioButton
 
 class DetailsViewModel():
-    def __init__(self, view: view.View, api: APIFetcher, coin_id):
+    def __init__(self, main_vm, view: view.View, api: APIFetcher, coin_id):
+        print(coin_id, 'details_id')
         self.view = view
+        self.main_vm = main_vm
         self.plusButtonState = 0
         self.coin_id = coin_id
-        self.coin_details = api.fetchCoinDetails(coin_id)
+        self.coin_details = api.fetchCoinDetails(self.coin_id)
         self.changed = False
         self.__cfgButtons()
         self.__setDetails()
@@ -29,12 +32,16 @@ class DetailsViewModel():
         
     def __cfgButtons(self):
         with open(ViewModel.FAVOURITES.value, 'r') as favourites_file:
-            favourites_json = json.load(favourites_file)
-            self.isFavourite = self.coin_id in favourites_json['coins']
+            favourites_dict = json.load(favourites_file)
+            self.isFavourite = self.coin_id in favourites_dict['coins']
 
         with open(ViewModel.PORTFOLIO.value, 'r') as portfolio_file:
-            portfolio_json = json.load(portfolio_file)
-            self.isInPortfolio = self.coin_id in portfolio_json['coins'].keys()
+            portfolio_dict = json.load(portfolio_file)
+            self.isInPortfolio = self.coin_id in portfolio_dict['coins'].keys()
+
+        self.view.details_star_button.clicked.connect(self.clickedFavouriteButton)
+        self.view.details_plus_button.clicked.connect(self.clickedPlusButton)
+        self.view.details_portfolio_tick_button.clicked.connect(self.clickedTickButton)
 
         self.__hidePortfolioForm()
 
@@ -43,14 +50,9 @@ class DetailsViewModel():
 
 
         print(self.isFavourite, self.isInPortfolio)
-        
-        self.view.details_star_button.clicked.connect(self.clickedFavouriteButton)
-        self.view.details_plus_button.clicked.connect(self.clickedPlusButton)
-        self.view.details_portfolio_tick_button.clicked.connect(self.clickedTickButton)
        
     def __setDetails(self):
         self.setRank(self.coin_details.market_cap_rank)
-
         self.setDetailsCoinID(self.coin_details.id, self.coin_details.image, self.coin_details.name, self.coin_details.symbol)
 
         self.setDetailsCoinPriceWidget(self.coin_details.current_price)
@@ -68,52 +70,69 @@ class DetailsViewModel():
 
 
     def setRank(self, value):
+        self.view.rank_label.setMaximumSize(QtCore.QSize(int((70 + math.floor(math.log10(value)) * 15) * self.view.ratio), int(30 * self.view.ratio)))
         self.view.rank_label.setText("Rank #" + str(value))
+        
     
     def setDetailsCoinID(self, coin_id, coin_logo, coin_name, coin_symbol):
-        pixmap = download_and_cache_coin_image(coin_id, coin_logo, ratio=self.view.ratio, size=50)
+        pixmap = utils.download_and_cache_coin_image(coin_id, coin_logo, ratio=self.view.ratio, size=50)
         self.view.details_coin_logo_label.setPixmap(pixmap)
         self.view.details_coin_name_label.setText(coin_name)
         self.view.details_coin_symbol_label.setText(coin_symbol)
 
     def setDetailsCoinPriceWidget(self, value):
-        self.view.details_coin_price_label.setText('${:,f}'.format(value))
+        self.view.details_coin_price_label.setText(utils.format_price(value))
 
     def setDetailsCoinPriceChangeWidget(self, change):
         if change >= 0.0:
-            self.view.details_coin_change_label.setText(f'<font color={Color.GREEN.value}>{change}%</font>')
+            self.view.details_coin_change_label.setText(f'<font color={Color.GREEN.value}>{utils.format_percentage(change)}</font>')
         else:
-            self.view.details_coin_change_label.setText(f'<font color={Color.RED.value}>{change}%</font>')
+            self.view.details_coin_change_label.setText(f'<font color={Color.RED.value}>{utils.format_percentage(change)}</font>')
 
     def setDetailsMarketCapWidget(self, value):
-        self.view.details_market_cap_widget_value.setText('${:,}'.format(value))
+        self.view.details_market_cap_widget_value.setText(utils.format_big_price(value))
 
     def setDetailsTradingVolumeWidget(self, value):
-        self.view.details_trading_volume_widget_value.setText('${:,}'.format(value))
+        self.view.details_trading_volume_widget_value.setText(utils.format_big_price(value))
 
     def setDetailsCirculatingSupplyWidget(self, value):
-        self.view.details_circulating_supply_widget_value.setText('{:,}'.format(int(value)))
+        self.view.details_circulating_supply_widget_value.setText(utils.format_number(int(value)))
 
     def setDetailsAllTimeHighWidget(self, value):
-        print('value', value)
-        self.view.details_all_time_high_widget_value.setText('${:,f}'.format(value))
+        self.view.details_all_time_high_widget_value.setText(utils.format_price(value))
 
     def setDetailsAllTimeLowWidget(self, value):
-        self.view.details_all_time_low_widget_value.setText('${:,f}'.format(value))
+        self.view.details_all_time_low_widget_value.setText(utils.format_price(value))
 
+    def setTimeChangeTableValues(self, *args):
+        for column, arg in enumerate(args):
+            item = QLabel(utils.format_percentage(arg))
+            arial = QFont()
+            arial.setFamily('Arial')
+            item.setAlignment(Qt.AlignCenter)
+            if float(arg) >= 0.0:
+                item.setStyleSheet("QLabel { background-color : " + Color.TRANSPARENT.value + "; color : " + Color.GREEN.value +";}")
+            else:                   
+                item.setStyleSheet("QLabel { background-color : " + Color.TRANSPARENT.value + "; color : " + Color.RED.value +";}")
+            arial.setPixelSize(int(20 * self.view.ratio))
+            item.setFont(arial)
+            self.view.time_change_table.setCellWidget(0, column, item)   
 
     def clickedFavouriteButton(self):
         self.changed = True
         if self.isFavourite:
             self.__setDetailsStarButton(DetailsStarButton.EMPTY)
+            self.__removeFavouritesEntry()
             self.isFavourite = False
         else:
             self.__setDetailsStarButton(DetailsStarButton.FILL)
+            self.__addFavouritesEntry()
             self.isFavourite = True
         
     def clickedPlusButton(self):
         if self.plusButtonState == 2:
-            self.changed = True
+            print('a')
+            self.__removePortfolioEntry()
             self.__setDetailsPortfolioButton(DetailsPortfolioButton.FILL)
         elif self.plusButtonState == 0:
             self.__showPortfolioForm()
@@ -171,20 +190,6 @@ class DetailsViewModel():
         self.view.details_portfolio_price_label.show()
         self.view.details_portfolio_price_text.show()
         self.view.details_portfolio_tick_button.show()
-
-    def setTimeChangeTableValues(self, *args):
-        for column, arg in enumerate(args):
-            item = QLabel(str(arg) + "%")
-            arial = QFont()
-            arial.setFamily('Arial')
-            item.setAlignment(Qt.AlignCenter)
-            if float(arg) >= 0.0:
-                item.setStyleSheet("QLabel { background-color : " + Color.TRANSPARENT.value + "; color : " + Color.GREEN.value +";}")
-            else:                   
-                item.setStyleSheet("QLabel { background-color : " + Color.TRANSPARENT.value + "; color : " + Color.RED.value +";}")
-            arial.setPixelSize(int(20 * self.view.ratio))
-            item.setFont(arial)
-            self.view.time_change_table.setCellWidget(0, column, item)   
        
     def __cfgPlot(self, sparkline, last_updated):
         matplotlib.use('QT5Agg')
@@ -202,13 +207,11 @@ class DetailsViewModel():
                 self.figure.patch.set_facecolor(Color.BLACK.value)
                 
                 y = sparkline
-                # x = [last_updated - timedelta(days=x) for x in range(7)]
                 x = pd.date_range(start=last_updated - timedelta(days=7), end=last_updated, periods=len(y))
                 
 
                 plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d/%Y'))
                 plt.gca().xaxis.set_major_locator(mdates.DayLocator())
-                # plt.plot(x_lin,y)
                 plt.gcf().autofmt_xdate()
 
                 plt.rcParams['axes.xmargin'] = 0
@@ -232,13 +235,56 @@ class DetailsViewModel():
         self.view.plot_container_layout.addWidget(MplCanvas(self))
 
     def __addPortfolioEntry(self, amount, price):
-        pass
-
-    def __addFavouritesEntry(self, amount, price):
-        pass
-
-    def __removeFavouritesEntry(self):
-        pass
+        with open(ViewModel.PORTFOLIO.value, 'r+') as portfolio_file:
+            portfolio_dict = json.load(portfolio_file)
+            print(portfolio_dict)
+            portfolio_dict['coins'][self.coin_id] = dict()
+            print('id', self.coin_id)
+            portfolio_dict['coins'][self.coin_id]['amount'] = amount
+            portfolio_dict['coins'][self.coin_id]['price'] = price
+            portfolio_json = json.dumps(portfolio_dict, indent=4)
+            portfolio_file.seek(0)
+            portfolio_file.write(portfolio_json)
+            portfolio_file.truncate()
+        self.main_vm.update_portfolio = True
 
     def __removePortfolioEntry(self):
-        pass
+        with open(ViewModel.PORTFOLIO.value, 'r+') as portfolio_file:
+            portfolio_dict = json.load(portfolio_file)
+            portfolio_dict['coins'].pop(self.coin_id)
+            portfolio_json = json.dumps(portfolio_dict, indent=4)
+
+            portfolio_file.seek(0)
+            portfolio_file.write(portfolio_json)
+            portfolio_file.truncate()
+        self.main_vm.update_portfolio = True
+
+    def __addFavouritesEntry(self):
+        with open(ViewModel.FAVOURITES.value, 'r+') as favourites_file:
+            favourites_dict = json.load(favourites_file)
+            favourites_dict['coins'].append(self.coin_id)
+            favourites_json = json.dumps(favourites_dict, indent=4)
+
+            favourites_file.seek(0)
+            favourites_file.write(favourites_json)
+            favourites_file.truncate()
+        self.main_vm.update_favourites = True
+
+    def __removeFavouritesEntry(self):
+        with open(ViewModel.FAVOURITES.value, 'r+') as favourites_file:
+            favourites_dict = json.load(favourites_file)
+            favourites_dict['coins'].remove(self.coin_id)
+            favourites_json = json.dumps(favourites_dict, indent=4)
+
+            favourites_file.seek(0)
+            favourites_file.write(favourites_json)
+            favourites_file.truncate()
+        self.main_vm.update_favourites = True
+    
+    def clearView(self):
+        plot = self.view.plot_container_layout.itemAt(0)
+        plot.widget().setParent(None)
+        
+        self.view.details_star_button.clicked.disconnect(self.clickedFavouriteButton)
+        self.view.details_plus_button.clicked.disconnect(self.clickedPlusButton)
+        self.view.details_portfolio_tick_button.clicked.disconnect(self.clickedTickButton)

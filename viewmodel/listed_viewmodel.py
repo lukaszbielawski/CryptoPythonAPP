@@ -5,13 +5,13 @@ from PyQt5.QtCore import Qt
 from view.view import View
 import viewmodel.details_viewmodel as details_vm
 from model.APIFetcher import APIFetcher
-from model.coins_utils import ListedCoinObject, CoinLogoWidget
+import model.coins_utils as utils
 import urllib, threading, io, os
 import urllib.request
 from urllib.request import Request
 import PIL, math
 from resources.Constants import Color, ViewModel
-from abc import ABC, abstractmethod
+from abc import ABC
 
 class ListedViewModel(ABC):
     def __init__(self, view: View, main_vm, api: APIFetcher, table_widget: QTableWidget):
@@ -42,7 +42,7 @@ class ListedViewModel(ABC):
         coin_data_layout.setContentsMargins(8,0,0,0)
         coin_data_layout.setSpacing(int(8 * self.view.ratio))
 
-        coin_logo_widget = CoinLogoWidget(coin_id, coin_logo, self, 20)
+        coin_logo_widget = utils.CoinLogoWidget(coin_id, coin_logo, self, 20)
         coin_name_widget = QLabel(str(coin_name))
         coin_symbol_widget = QLabel(str(coin_symbol))
 
@@ -60,12 +60,12 @@ class ListedViewModel(ABC):
 
         self.addItemAt(index, 0, QLabel(str(no)))
         self.addItemAt(index, 1, coin_data_widget, layout=coin_data_layout) 
-        self.addItemAt(index, 2, QLabel('${:,f}'.format(price)))
-        self.addItemAt(index, 3, QLabel(str(one_hour) +'%'), value=one_hour)
-        self.addItemAt(index, 4, QLabel(str(twenty_four_hour)+'%'), value=twenty_four_hour)
-        self.addItemAt(index, 5, QLabel(str(seven_days)+'%'), value=seven_days)
-        self.addItemAt(index, 6, QLabel('${:,}'.format(volume)))
-        self.addItemAt(index, 7, QLabel('${:,}'.format(market_cap)))
+        self.addItemAt(index, 2, QLabel(utils.format_price(price)))
+        self.addItemAt(index, 3, QLabel(utils.format_percentage(one_hour)), value=one_hour)
+        self.addItemAt(index, 4, QLabel(utils.format_percentage(twenty_four_hour)), value=twenty_four_hour)
+        self.addItemAt(index, 5, QLabel(utils.format_percentage(seven_days)), value=seven_days)
+        self.addItemAt(index, 6, QLabel(utils.format_big_price(volume)))
+        self.addItemAt(index, 7, QLabel(utils.format_big_price(market_cap)))
 
     
     def _cfgTable(self):
@@ -92,7 +92,7 @@ class ListedViewModel(ABC):
     def addItemAt(self, row, column, item: QWidget, layout=None, value=None):
 
         if column in (3, 4, 5):
-            if type(value) == str:
+            if value == None:
                 color = Color.WHITE.value
             else:
                 color = Color.GREEN.value if value >= 0.0 else Color.RED.value
@@ -106,8 +106,10 @@ class ListedViewModel(ABC):
                 coin_name_widget.setFont(self.arial)
                 coin_symbol_widget = layout.itemAt(2).widget()
                 coin_symbol_widget.setFont(self.arial)
-                coin_name_widget.setStyleSheet("QLabel { background-color : " + Color.TRANSPARENT.value + "; color : " + Color.WHITE.value + ";}")
-                coin_symbol_widget.setStyleSheet("QLabel { background-color : " + Color.TRANSPARENT.value + "; font-size: " + str(int(16 * self.view.ratio)) + "px; color : " + Color.DARK_GRAY.value + ";}")
+                coin_name_widget.setStyleSheet("QLabel { background-color : " + Color.TRANSPARENT.value + 
+                "; color : " + Color.WHITE.value + ";}")
+                coin_symbol_widget.setStyleSheet("QLabel { background-color : " + Color.TRANSPARENT.value + 
+                "; font-size: " + str(int(16 * self.view.ratio)) + "px; color : " + Color.DARK_GRAY.value + ";}")
             case 2:
                 color = Color.WHITE.value
             case 6:
@@ -121,8 +123,3 @@ class ListedViewModel(ABC):
             item.setFont(self.arial)
             item.setStyleSheet("QLabel { background-color : " + Color.TRANSPARENT.value + "; color : " + color + ";}")
         self.table_widget.setCellWidget(row, column, item)
-
-        @abstractmethod 
-        def getClickedRow(self, row, column):
-            pass
-

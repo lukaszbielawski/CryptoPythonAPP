@@ -17,7 +17,8 @@ from model.APIFetcher import APIFetcher
 class MainViewModel():
     def __init__(self, view: View, api: APIFetcher):
         self.view = view
-        self.toUpdate = False
+        self.update_favourites = False
+        self.update_portfolio = False
         self.api = api  # (self, ratio: float, main_vm, api: APIFetcher, table_widget: QTableWidget):
         self.master_viewmodel = master_vm.MasterViewModel(self.view, self, api, self.view.master_table_widget) #default view
         # self.favourites_viewmodel = favourites_vm.FavouritesViewModel(self.view, self, api, self.view.favourites_table)
@@ -40,14 +41,20 @@ class MainViewModel():
     def favouritesButtonClicked(self):
         if self.favourites_viewmodel is None:
             self.favourites_viewmodel = favourites_vm.FavouritesViewModel(self.view, self, self.api, self.view.favourites_table)
-        if self.toUpdate:
+        if self.update_favourites:
+            self.update_favourites = False
+            print('fupd')
+            self.favourites_viewmodel.clearView()
             self.favourites_viewmodel.loadFavourites()
         self.view.stackedWidget.setCurrentIndex(2)
 
     def myPortfolioButtonClicked(self):
         if self.portfolio_viewmodel is None:
             self.portfolio_viewmodel = portfolio_vm.PortfolioViewModel(self.view, self, self.api, self.view.portfolio_table_widget)
-        if self.toUpdate:
+        if self.update_portfolio:
+            self.update_portfolio = False
+            print('pubd')
+            self.portfolio_viewmodel.clearView()
             self.portfolio_viewmodel.loadPortfolio()
         self.view.stackedWidget.setCurrentIndex(3)
 
@@ -55,8 +62,10 @@ class MainViewModel():
         print(self.view.tooltip_search_text.text())
 
     def detailsRequest(self, coin_id):
-        plot = self.view.plot_container_layout.itemAt(0)
-        if plot is not None:
-            plot.widget().setParent(None)
-        self.details_viewmodel = details_vm.DetailsViewModel(self.view, self.api, coin_id)
+        print(coin_id, 'main_id')
+    
+        if self.details_viewmodel is not None:
+            self.details_viewmodel.clearView()
+
+        self.details_viewmodel = details_vm.DetailsViewModel(self, self.view, self.api, coin_id)
         self.view.stackedWidget.setCurrentIndex(1)

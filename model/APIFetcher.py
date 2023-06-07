@@ -58,19 +58,20 @@ class APIFetcher():
             print(e)
 
 
-
-    def __requestSpecificCoinsJSON(self, for_viewmodel):
+    def getSpecificCoinsID(self, for_viewmodel):
         if for_viewmodel == Constants.ViewModel.FAVOURITES:
             with open(Constants.ViewModel.FAVOURITES.value, 'r') as json_file:
                 print(json_file)
-                coin_list = json.load(json_file)['coins']
+                return json.load(json_file)['coins']
         else:
              print('xd')
              with open(Constants.ViewModel.PORTFOLIO.value, 'r') as json_file:
                 coins = json.load(json_file)['coins']
                 print('PFP',json_file)
-                print(coins)
-                coin_list = coins.keys()
+                return coins.keys()
+            
+    def __requestSpecificCoinsJSON(self, for_viewmodel):
+        coin_list = self.getSpecificCoinsID(for_viewmodel)
         response_API = requests.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=' 
                      + '%2C'.join(coin_list) +'&order=market_cap_desc&per_page=250&page=1&sparkline=false&price_change_percentage=1h%2C24h%2C7d')
         data = response_API.text
