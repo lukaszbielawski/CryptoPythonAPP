@@ -13,6 +13,7 @@ import viewmodel.favourites_viewmodel as favourites_vm
 import viewmodel.details_viewmodel as details_vm
 import viewmodel.portfolio_viewmodel as portfolio_vm
 from model.APIFetcher import APIFetcher
+from resources.Constants import Color
 
 class MainViewModel():
     def __init__(self, view: View, api: APIFetcher):
@@ -59,7 +60,31 @@ class MainViewModel():
         self.view.stackedWidget.setCurrentIndex(3)
 
     def searchButtonClicked(self):
-        print(self.view.tooltip_search_text.text())
+        # print('cliced')
+        # print(' tx1' ,self.view.tooltip_search_text.text())
+        self.api.fetchSearchCoins()
+        self.matchSearch(self.view.tooltip_search_text.text())
+
+    def matchSearch(self, text):
+        try:
+            print(' txt' ,text)
+            coin_tuple = sorted(filter(lambda x: x[1].lower().startswith(text.lower()), self.api.search_coins_dict.items()), key=lambda x: x[1].lower())
+            print('matches', len(coin_tuple))
+            print('lng', len(self.api.search_coins_dict.items()))
+            color = Color.WHITE.value
+            placeholder = 'Search...'
+        except Exception as e:
+            color = Color.RED.value
+            placeholder = 'Could not match the text'
+
+        self.view.tooltip_search_text.setPlaceholderText(placeholder)
+        self.view.tooltip_search_text.setStyleSheet("background: #232323;\n"
+            "border: 1px solid;\n"
+            "color: " + color + ";\n"
+            "font-family: Arial, Helvetica, sans-serif;\n"
+            "font-size: " + str(int(20 * self.view.ratio)) + "px;\n"
+            "")
+        self.detailsRequest(coin_tuple[0][0])
 
     def detailsRequest(self, coin_id):
         print(coin_id, 'main_id')

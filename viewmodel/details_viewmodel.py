@@ -24,6 +24,7 @@ class DetailsViewModel():
         self.plusButtonState = 0
         self.coin_id = coin_id
         self.coin_details = api.fetchCoinDetails(self.coin_id)
+        print('coin details len', self.coin_details.id, self.coin_details.image, self.coin_details.market_cap_rank)
         self.changed = False
         self.__cfgButtons()
         self.__setDetails()
@@ -70,43 +71,77 @@ class DetailsViewModel():
 
 
     def setRank(self, value):
-        self.view.rank_label.setMaximumSize(QtCore.QSize(int((70 + math.floor(math.log10(value)) * 15) * self.view.ratio), int(30 * self.view.ratio)))
-        self.view.rank_label.setText("Rank #" + str(value))
+        try:
+            self.view.rank_label.setMaximumSize(QtCore.QSize(int((70 + math.floor(math.log10(value)) * 15) * self.view.ratio), int(30 * self.view.ratio)))
+            self.view.rank_label.setText("Rank #" + str(value))
+        except Exception as _:
+            self.view.rank_label.setText("Rank #–")
         
     
     def setDetailsCoinID(self, coin_id, coin_logo, coin_name, coin_symbol):
         pixmap = utils.download_and_cache_coin_image(coin_id, coin_logo, ratio=self.view.ratio, size=50)
         self.view.details_coin_logo_label.setPixmap(pixmap)
-        self.view.details_coin_name_label.setText(coin_name)
-        self.view.details_coin_symbol_label.setText(coin_symbol)
+        try:
+            self.view.details_coin_name_label.setText(coin_name)
+            self.view.details_coin_symbol_label.setText(coin_symbol)
+        except Exception as _:
+            self.view.details_coin_name_label.setText('Unknown')
+            self.view.details_coin_symbol_label.setText('Unk')
 
     def setDetailsCoinPriceWidget(self, value):
-        self.view.details_coin_price_label.setText(utils.format_price(value))
+        try:
+            self.view.details_coin_price_label.setText(utils.format_price(value))
+        except Exception as _:
+            self.view.details_coin_price_label.setText("–")
 
     def setDetailsCoinPriceChangeWidget(self, change):
-        if change >= 0.0:
-            self.view.details_coin_change_label.setText(f'<font color={Color.GREEN.value}>{utils.format_percentage(change)}</font>')
-        else:
-            self.view.details_coin_change_label.setText(f'<font color={Color.RED.value}>{utils.format_percentage(change)}</font>')
+        try:
+            if change >= 0.0:
+                self.view.details_coin_change_label.setText(f'<font color={Color.GREEN.value}>{utils.format_percentage(change)}</font>')
+            else:
+                self.view.details_coin_change_label.setText(f'<font color={Color.RED.value}>{utils.format_percentage(change)}</font>')
+        except Exception as _:
+            self.view.details_coin_change_label.setText(f'<font color={Color.WHITE.value}>–%</font>')
+            
 
     def setDetailsMarketCapWidget(self, value):
-        self.view.details_market_cap_widget_value.setText(utils.format_big_price(value))
+        try:
+            self.view.details_market_cap_widget_value.setText(utils.format_big_price(value))
+        except Exception as _:
+            self.view.details_market_cap_widget_value.setText('–')
 
     def setDetailsTradingVolumeWidget(self, value):
-        self.view.details_trading_volume_widget_value.setText(utils.format_big_price(value))
+        try:
+            self.view.details_market_cap_widget_value.setText(utils.format_big_price(value))
+        except Exception as _:
+            self.view.details_trading_volume_widget_value.setText('–')
 
     def setDetailsCirculatingSupplyWidget(self, value):
-        self.view.details_circulating_supply_widget_value.setText(utils.format_number(int(value)))
+        try:
+            self.view.details_circulating_supply_widget_value.setText(utils.format_number(int(value)))
+        except Exception as _:
+            self.view.details_circulating_supply_widget_value.setText(0)
 
     def setDetailsAllTimeHighWidget(self, value):
-        self.view.details_all_time_high_widget_value.setText(utils.format_price(value))
+        try:
+            self.view.details_all_time_high_widget_value.setText(utils.format_price(value))
+        except Exception as _:
+            self.view.details_all_time_high_widget_value.setText('–')
 
     def setDetailsAllTimeLowWidget(self, value):
-        self.view.details_all_time_low_widget_value.setText(utils.format_price(value))
+        try:
+            self.view.details_all_time_low_widget_value.setText(utils.format_price(value))
+        except Exception as _:
+            self.view.details_all_time_low_widget_value.setText('-')
 
     def setTimeChangeTableValues(self, *args):
         for column, arg in enumerate(args):
-            item = QLabel(utils.format_percentage(arg))
+            try:
+                item = QLabel(utils.format_percentage(arg))
+            except Exception as _: 
+                item = QLabel('–')
+                self.view.time_change_table.setCellWidget(0, column, item)
+                return   
             arial = QFont()
             arial.setFamily('Arial')
             item.setAlignment(Qt.AlignCenter)

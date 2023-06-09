@@ -7,6 +7,10 @@
         "adventure-gold": {
             "amount": 100.0,
             "price": 0.5
+        },
+        "ripple": {
+            "amount": 1000.0,
+            "price": 0.5
         }
     }
 }

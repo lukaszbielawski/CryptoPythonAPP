@@ -12,6 +12,7 @@ class APIFetcher():
         self.master_coins_array: list[ListedCoinObject] = []
         self.favourites_coins_array: list[ListedCoinObject] = []
         self.portfolio_coins_array: list[ListedCoinObject] = []
+        self.search_coins_dict = dict()
         self.global_data: GlobalCoinDataObject = self.fetchGlobalData()
 
     
@@ -22,6 +23,15 @@ class APIFetcher():
                     global_data['market_cap_percentage']['btc'], global_data['active_cryptocurrencies'], global_data['market_cap_change_percentage_24h_usd'])
         except Exception as e:
             print (e)
+
+    def fetchSearchCoins(self):
+        try:
+            search_data = self.__requestSearchCoinsJSON()
+            for elem in search_data:
+                self.search_coins_dict[elem['id']] = f"{elem['name']}"       
+        except Exception as e:
+            print (e)
+
         
     def fetchListedCoinObjects(self, for_viewmodel):
         if for_viewmodel == Constants.ViewModel.MASTER:
@@ -32,11 +42,13 @@ class APIFetcher():
                 self.__coins_loaded += len(new_list)
                 return new_list
             except Exception as e:
-                
-                print(e, 'zzzzz')
+                print(e)
         elif for_viewmodel == Constants.ViewModel.FAVOURITES:
             try:
+                print('ffetching')
+                print('l before', len(self.favourites_coins_array))
                 self.favourites_coins_array = self.__createListedCoinObjects(jsonData=self.__requestSpecificCoinsJSON(Constants.ViewModel.FAVOURITES))
+                print('l after', len(self.favourites_coins_array))
             except Exception as e:
                 print(e)
         else:
@@ -91,8 +103,11 @@ class APIFetcher():
     def __requestPageJSON(self):
         response_API = requests.get(f'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page={self.__page}&sparkline=false&price_change_percentage=1h%2C24h%2C7d&locale=en&precision=full')
         data = response_API.text
+        return json.loads(data)
 
-        # print(data)
+    def __requestSearchCoinsJSON(self):
+        response_API = requests.get(f'https://api.coingecko.com/api/v3/coins/list?include_platform=false')
+        data = response_API.text
         return json.loads(data)
     
     def __createListedCoinObjects(self, jsonData) -> list[ListedCoinObject]: 

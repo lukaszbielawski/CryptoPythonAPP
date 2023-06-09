@@ -9,9 +9,9 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QTableWidgetItem, QAbstractItemView, QHeaderView, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QTableWidgetItem, QAbstractItemView, QHeaderView, QHBoxLayout, QSpacerItem, QSizePolicy
 from PyQt5.QtGui import QBrush, QColor, QFont
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QPoint
 
 class View(object):
         
@@ -73,8 +73,8 @@ class View(object):
         self.tooltip_search_text = QtWidgets.QLineEdit(self.layoutWidget, placeholderText='Search...')
         self.tooltip_search_text.setMaxLength(30)
         # self.details_portfolio_bought_amount_text.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.tooltip_search_text.setMinimumSize(QtCore.QSize(int(200 * self.ratio), int(25 * self.ratio)))
-        self.tooltip_search_text.setMaximumSize(QtCore.QSize(int(200 * self.ratio), int(25 * self.ratio)))
+        self.tooltip_search_text.setMinimumSize(QtCore.QSize(int(250 * self.ratio), int(25 * self.ratio)))
+        self.tooltip_search_text.setMaximumSize(QtCore.QSize(int(250 * self.ratio), int(25 * self.ratio)))
         self.tooltip_search_text.setStyleSheet("background: #232323;\n"
 "border: 1px solid;\n"
 "color: white;\n"
@@ -94,7 +94,9 @@ class View(object):
         self.tooltip_search_button.setObjectName("tooltip_search_button")
         self.tooltip_layout.addWidget(self.tooltip_search_button)
 
+        
         self.main_layout.addLayout(self.tooltip_layout)
+
         self.toolbar_line = QtWidgets.QFrame(self.layoutWidget)
         self.toolbar_line.setMinimumSize(QtCore.QSize(0, 1))
         self.toolbar_line.setMaximumSize(QtCore.QSize(16777215, 1))
@@ -989,7 +991,7 @@ class View(object):
         self.stackedWidget.addWidget(self.portfolio_widget)
         self.main_layout.addWidget(self.stackedWidget)
         self.main_layout.setStretch(1, 1)
-
+        
         self.retranslateUi(Form)
         self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Form)
