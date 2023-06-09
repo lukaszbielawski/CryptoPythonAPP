@@ -5,7 +5,6 @@ class MainWindow(QMainWindow):
     def __init__(self, app):
         super(MainWindow, self).__init__()
         self.app = app
-
         self.__initGeometry()
    
 

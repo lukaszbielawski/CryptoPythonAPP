@@ -22,7 +22,7 @@ class APIFetcher():
             return GlobalCoinDataObject(global_data['total_market_cap']['usd'], global_data['total_volume']['usd'], 
                     global_data['market_cap_percentage']['btc'], global_data['active_cryptocurrencies'], global_data['market_cap_change_percentage_24h_usd'])
         except Exception as e:
-            print (e)
+            print(e)
 
     def fetchSearchCoins(self):
         try:
@@ -30,7 +30,7 @@ class APIFetcher():
             for elem in search_data:
                 self.search_coins_dict[elem['id']] = f"{elem['name']}"       
         except Exception as e:
-            print (e)
+            print(e)
 
         
     def fetchListedCoinObjects(self, for_viewmodel):
@@ -45,10 +45,7 @@ class APIFetcher():
                 print(e)
         elif for_viewmodel == Constants.ViewModel.FAVOURITES:
             try:
-                print('ffetching')
-                print('l before', len(self.favourites_coins_array))
                 self.favourites_coins_array = self.__createListedCoinObjects(jsonData=self.__requestSpecificCoinsJSON(Constants.ViewModel.FAVOURITES))
-                print('l after', len(self.favourites_coins_array))
             except Exception as e:
                 print(e)
         else:
@@ -76,10 +73,8 @@ class APIFetcher():
                 print(json_file)
                 return json.load(json_file)['coins']
         else:
-             print('xd')
              with open(Constants.ViewModel.PORTFOLIO.value, 'r') as json_file:
                 coins = json.load(json_file)['coins']
-                print('PFP',json_file)
                 return coins.keys()
             
     def __requestSpecificCoinsJSON(self, for_viewmodel):

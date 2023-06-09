@@ -80,8 +80,8 @@ class ListedViewModel(ABC):
         self.table_widget.verticalHeader().setSectionResizeMode(QHeaderView.Fixed)
 
         self.table_widget.setColumnWidth(0, int(91 * self.view.ratio))
-        self.table_widget.setColumnWidth(1, int(573 * self.view.ratio)) #637
-        self.table_widget.setColumnWidth(2, int(282 * self.view.ratio))#218
+        self.table_widget.setColumnWidth(1, int(573 * self.view.ratio))
+        self.table_widget.setColumnWidth(2, int(282 * self.view.ratio))
         self.table_widget.setColumnWidth(3, int(127 * self.view.ratio))
         self.table_widget.setColumnWidth(4, int(127 * self.view.ratio))
         self.table_widget.setColumnWidth(5, int(127 * self.view.ratio))

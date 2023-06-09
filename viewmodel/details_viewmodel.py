@@ -18,13 +18,11 @@ from resources.Constants import Color, ViewModel, DetailsStarButton,  DetailsPor
 
 class DetailsViewModel():
     def __init__(self, main_vm, view: view.View, api: APIFetcher, coin_id):
-        print(coin_id, 'details_id')
         self.view = view
         self.main_vm = main_vm
         self.plusButtonState = 0
         self.coin_id = coin_id
         self.coin_details = api.fetchCoinDetails(self.coin_id)
-        print('coin details len', self.coin_details.id, self.coin_details.image, self.coin_details.market_cap_rank)
         self.changed = False
         self.__cfgButtons()
         self.__setDetails()
@@ -50,7 +48,7 @@ class DetailsViewModel():
         self.__setDetailsStarButton(DetailsStarButton.FILL if self.isFavourite else DetailsStarButton.EMPTY)
 
 
-        print(self.isFavourite, self.isInPortfolio)
+        # print(self.isFavourite, self.isInPortfolio)
        
     def __setDetails(self):
         self.setRank(self.coin_details.market_cap_rank)
@@ -166,7 +164,6 @@ class DetailsViewModel():
         
     def clickedPlusButton(self):
         if self.plusButtonState == 2:
-            print('a')
             self.__removePortfolioEntry()
             self.__setDetailsPortfolioButton(DetailsPortfolioButton.FILL)
         elif self.plusButtonState == 0:
@@ -186,7 +183,6 @@ class DetailsViewModel():
             self.view.details_portfolio_price_label.setText('Price')
             self.__hidePortfolioForm()
 
-            # print(amount, price)
             self.changed = True
             self.__setDetailsPortfolioButton(DetailsPortfolioButton.TRASH)
             self.__addPortfolioEntry(amount, price)
@@ -272,12 +268,11 @@ class DetailsViewModel():
     def __addPortfolioEntry(self, amount, price):
         with open(ViewModel.PORTFOLIO.value, 'r+') as portfolio_file:
             portfolio_dict = json.load(portfolio_file)
-            print(portfolio_dict)
             portfolio_dict['coins'][self.coin_id] = dict()
-            print('id', self.coin_id)
             portfolio_dict['coins'][self.coin_id]['amount'] = amount
             portfolio_dict['coins'][self.coin_id]['price'] = price
             portfolio_json = json.dumps(portfolio_dict, indent=4)
+            
             portfolio_file.seek(0)
             portfolio_file.write(portfolio_json)
             portfolio_file.truncate()

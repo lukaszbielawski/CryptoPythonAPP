@@ -16,7 +16,6 @@ from viewmodel.listed_viewmodel import ListedViewModel
 class MasterViewModel(ListedViewModel):
     def __init__(self, ratio: float, main_vm, api: APIFetcher, table_widget: QTableWidget):
         super().__init__(ratio, main_vm, api, table_widget)
-        print('master init')
         self.table_widget.verticalScrollBar().valueChanged.connect(self.onMasterTableScroll)
         self.readyToScroll = True
         self.already_loaded = 0
@@ -28,14 +27,12 @@ class MasterViewModel(ListedViewModel):
         rect = self.view.master_table_widget.viewport().rect()
         # top_index = self.view.master_table_widget.indexAt(rect.topLeft()).row()
         bottom_index = self.view.master_table_widget.indexAt(rect.bottomLeft()).row()
-        print(bottom_index, self.already_loaded)
         if bottom_index + 1 == self.already_loaded and self.readyToScroll:
             self.readyToScroll = False
             self.loadPage()
             self.readyToScroll = True
 
     def loadPage(self):
-        print(self.already_loaded + self.per_page > self.api.get_coins_loaded())
         if self.already_loaded + self.per_page > self.api.get_coins_loaded():
             self.api.fetchListedCoinObjects(ViewModel.MASTER)
         try:
@@ -47,7 +44,7 @@ class MasterViewModel(ListedViewModel):
                           coins[self.already_loaded + i].total_volume, coins[self.already_loaded + i].market_cap)
             self.already_loaded += self.per_page
         except Exception as e:
-            print(e, 'zzzy')
+            print(e)
 
     def loadGlobalStats(self):
         global_data = self.api.global_data
@@ -76,7 +73,6 @@ class MasterViewModel(ListedViewModel):
         self.view.number_of_coins_widget_value.setText(utils.format_number(value))
 
     def getClickedRow(self, row, column):
-        print(self.api.master_coins_array[row].id, 'master_id')
         self.main_vm.detailsRequest(self.api.master_coins_array[row].id)
 
 

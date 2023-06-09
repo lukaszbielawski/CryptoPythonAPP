@@ -214,14 +214,11 @@ class PortfolioViewModel(ListedViewModel):
         self.view.portfolio_number_of_coins_widgetvalue.setText(str(number))
 
     def getClickedRow(self, row, column):
-        print(self.api.portfolio_coins_array[row].id, 'id')
-        print(self.api.portfolio_coins_array)
         self.main_vm.detailsRequest(self.api.portfolio_coins_array[row].id)
         
     def clearView(self):
         self.row_count = 0
         self.table_widget.setRowCount(0)
-        print('ile', self.table_widget.rowCount())
         self.setTotalBalance(0)
         self.setPortfolioChange(0)
         self.setTotalProfit(0)

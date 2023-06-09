@@ -44,7 +44,6 @@ class MainViewModel():
             self.favourites_viewmodel = favourites_vm.FavouritesViewModel(self.view, self, self.api, self.view.favourites_table)
         if self.update_favourites:
             self.update_favourites = False
-            print('fupd')
             self.favourites_viewmodel.clearView()
             self.favourites_viewmodel.loadFavourites()
         self.view.stackedWidget.setCurrentIndex(2)
@@ -54,14 +53,11 @@ class MainViewModel():
             self.portfolio_viewmodel = portfolio_vm.PortfolioViewModel(self.view, self, self.api, self.view.portfolio_table_widget)
         if self.update_portfolio:
             self.update_portfolio = False
-            print('pubd')
             self.portfolio_viewmodel.clearView()
             self.portfolio_viewmodel.loadPortfolio()
         self.view.stackedWidget.setCurrentIndex(3)
 
     def searchButtonClicked(self):
-        # print('cliced')
-        # print(' tx1' ,self.view.tooltip_search_text.text())
         self.api.fetchSearchCoins()
         self.matchSearch(self.view.tooltip_search_text.text())
 
@@ -69,14 +65,15 @@ class MainViewModel():
         try:
             print(' txt' ,text)
             coin_tuple = sorted(filter(lambda x: x[1].lower().startswith(text.lower()), self.api.search_coins_dict.items()), key=lambda x: x[1].lower())
-            print('matches', len(coin_tuple))
-            print('lng', len(self.api.search_coins_dict.items()))
+            
             color = Color.WHITE.value
             placeholder = 'Search...'
         except Exception as e:
             color = Color.RED.value
             placeholder = 'Could not match the text'
-
+        if len(coin_tuple) == 0: 
+            print('Could not match expression')
+            return
         self.view.tooltip_search_text.setPlaceholderText(placeholder)
         self.view.tooltip_search_text.setStyleSheet("background: #232323;\n"
             "border: 1px solid;\n"
