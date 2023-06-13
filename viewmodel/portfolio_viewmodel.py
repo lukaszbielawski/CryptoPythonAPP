@@ -32,7 +32,7 @@ class PortfolioViewModel(ListedViewModel):
                         coins[i].symbol, coins[i].current_price, coins[i].price_change_percentage_1h_in_currency,
                           coins[i].price_change_percentage_24h_in_currency, coins[i].price_change_percentage_7d_in_currency)
         except Exception as e:
-            print(e)
+            print(e, '1')
         self.__setBalanceWidgets()
 
     def __setBalanceWidgets(self):

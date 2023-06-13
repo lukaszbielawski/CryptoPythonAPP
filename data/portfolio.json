@@ -12,9 +12,13 @@
             "amount": 1000.0,
             "price": 0.5
         },
-        "ampleforth-governance-token": {
-            "amount": 999.0,
-            "price": 3219382103.0
+        "algorand": {
+            "amount": 1000.0,
+            "price": 0.1
+        },
+        "shiba-inu": {
+            "amount": 1000000000.0,
+            "price": 7e-06
         }
     }
 }
