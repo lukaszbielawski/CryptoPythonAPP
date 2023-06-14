@@ -1,24 +1,4 @@
 {
     "coins": {
-        "apecoin": {
-            "amount": 100.0,
-            "price": 3.0
-        },
-        "adventure-gold": {
-            "amount": 100.0,
-            "price": 0.5
-        },
-        "ripple": {
-            "amount": 1000.0,
-            "price": 0.5
-        },
-        "algorand": {
-            "amount": 1000.0,
-            "price": 0.1
-        },
-        "shiba-inu": {
-            "amount": 1000000000.0,
-            "price": 7e-06
-        }
     }
 }

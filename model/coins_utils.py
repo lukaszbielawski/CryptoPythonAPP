@@ -71,6 +71,7 @@ def download_and_cache_coin_image(coin_id, imagePath, ratio, size):
 
     try:
         if not os.path.exists(f'./cache/{coin_id}_{int(ratio * size)}.png'):
+            if not os.path.exists('./cache'): os.mkdir('./cache', mode = 0o777)
             url = imagePath
             request_site = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
             data = urllib.request.urlopen(request_site)
