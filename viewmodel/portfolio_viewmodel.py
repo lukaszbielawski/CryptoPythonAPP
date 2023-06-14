@@ -217,7 +217,7 @@ class PortfolioViewModel(ListedViewModel):
 
     def getClickedRow(self, row, column):
         #Opens details view for clicked row's ID
-        self.main_vm.detailsRequest(self.api.table_widget[row].id)
+        self.main_vm.detailsRequest(self.api.portfolio_coins_array[row].id)
         
     def clearView(self):
         #This method resets values of widgets and erase table
