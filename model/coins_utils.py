@@ -1,14 +1,10 @@
-import string, decimal, datetime, math
-import numpy as np
-import urllib
+import datetime, math, urllib, PIL, os
 from urllib.request import Request
-from PyQt5 import QtCore, QtGui, QtWidgets, uic
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QTableWidgetItem, QAbstractItemView, QHeaderView, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy
-from PyQt5.QtGui import QBrush, QColor, QFont
-from PyQt5.QtCore import Qt
-import PIL, os
+from PyQt5 import QtGui
+from PyQt5.QtWidgets import QLabel
 
 class ListedCoinObject():
+    #A class that stores primary data about a coin
     def __init__(self, id, market_cap_rank, image, name, symbol, current_price, 
                  price_change_percentage_1h_in_currency, price_change_percentage_24h_in_currency, 
                  price_change_percentage_7d_in_currency, total_volume, market_cap):
@@ -25,6 +21,7 @@ class ListedCoinObject():
         self.market_cap = market_cap
 
 class CoinDetailsObject():
+    #A class that stores detailed data about a coin
     def __init__(self, id, market_cap_rank, image, name, symbol, current_price, 
                  market_cap, total_volume, circulating_supply, ath, atl, price_change_percentage_1h, 
                  price_change_percentage_24h, price_change_percentage_7d, price_change_percentage_14d,
@@ -50,12 +47,9 @@ class CoinDetailsObject():
         self.price_change_percentage_1y = price_change_percentage_1y
         self.sparkline = sparkline
         self.last_updated = datetime.datetime.strptime(last_updated, "%Y-%m-%dT%H:%M:%S.%fZ")
-        
-
-#   return (int(global_data['total_market_cap']['usd']), int(global_data['total_volume']['usd']), 
-#                     global_data['market_cap_percentage']['btc'], global_data['active_cryptocurrencies'], global_data['market_cap_change_percentage_24h_usd'])
 
 class GlobalCoinDataObject():
+    #A class that stores global data about whole cryptocurrency market
      def __init__(self, total_market_cap, total_volume, btc_dominance, active_cryptocurrencies, market_cap_change_percentage_24h):
          self.total_market_cap = total_market_cap
          self.total_volume = total_volume
@@ -64,12 +58,17 @@ class GlobalCoinDataObject():
          self.market_cap_change_percentage_24h = market_cap_change_percentage_24h
     
 class CoinLogoWidget(QLabel):
+    #Custom class that displays image in label
         def __init__(self, coin_id, imagePath, parent, size):
             super(QLabel, self).__init__()
             pixmap = download_and_cache_coin_image(coin_id, imagePath, parent.view.ratio, size)
             self.setPixmap(pixmap)
 
 def download_and_cache_coin_image(coin_id, imagePath, ratio, size):
+    #This function is checking for existence of proper image in cache and if it is not found then it downloads it
+    #After download this function resizes image and store it in cache.
+    #Regardles of initial appearance of image in cache it returns QPixMap which contains fetched image
+
     try:
         if not os.path.exists(f'./cache/{coin_id}_{int(ratio * size)}.png'):
             url = imagePath
@@ -84,12 +83,14 @@ def download_and_cache_coin_image(coin_id, imagePath, ratio, size):
         return QtGui.QPixmap(f'./cache/bitcoin_{int(ratio * size)}.png')
         
 def format_percentage(percent):
+    #This function formats percentage values to display it in proper form
     try:
         return f'{round(percent, 1)}%'
     except Exception as e:
         return '—'
     
 def format_price(price):
+    #This function formats prices to display it in proper form
     if price >= 1.0:
         return '${:,.2f}'.format(price)
     elif price <= -1.0:
@@ -104,12 +105,15 @@ def format_price(price):
         return '$0.00'
 
 def format_big_price(price):
+    #This function formats big prices to display it in proper form
     return '${:,}'.format(int(price))
 
 def format_number(number):
+    #This function formats numbers which are not prices to display it in proper form
     return '{:,}'.format(number)
 
 def convert_number_to_written(number):
+    #This function convert numeric number to written number ex. 1 213 531 213 to Bilion
     digits = int(math.log10(number))
     number = str(number)
     
@@ -122,13 +126,6 @@ def convert_number_to_written(number):
         string_with_dot = string[:digits - 11] + '.' + string[digits - 11:]
         name = ' Trillion'
     return string_with_dot + name
-
-if __name__ == '__main__':
-    pass
-    # format_price(26810.51017546782)# == 26810.51
-    # format_price(0.00000734921408550618) #== 0.000007349
-    # format_price(0.088613213534) #== 0.08861
-
 
                
           

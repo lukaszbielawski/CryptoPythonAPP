@@ -1,19 +1,16 @@
-from PyQt5 import QtCore, QtGui, QtWidgets, uic
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QTableWidgetItem, QAbstractItemView, QHeaderView, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy, QTableWidget
-from PyQt5.QtGui import QBrush, QColor, QFont
+from PyQt5.QtWidgets import QWidget, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy, QTableWidget
 from PyQt5.QtCore import Qt
 import view.view as view
 from viewmodel.listed_viewmodel import ListedViewModel
-from resources.Constants import ViewModel
+from resources.Constants import ListedViewModelEnum
 from model.APIFetcher import APIFetcher
 import model.coins_utils as utils
-from decimal import Decimal
 import json
-import functools
 from resources.Constants import Color
 
 
 class PortfolioViewModel(ListedViewModel):
+    #This view model manages portfolio view and control display of its widgets
     def __init__(self, ratio: float, main_vm, api: APIFetcher, table_widget: QTableWidget):
         super().__init__(ratio, main_vm, api, table_widget)
         self.total_balance = 0.0
@@ -22,9 +19,10 @@ class PortfolioViewModel(ListedViewModel):
         
         
     def loadPortfolio(self):
-        if len(self.api.getSpecificCoinsID(ViewModel.PORTFOLIO)) == 0: return
+        #This method loads portfolio coins from APIFetcher and adding rows that are representing these coins to view's table widget
+        if len(self.api.getSpecificCoinsID(ListedViewModelEnum.PORTFOLIO)) == 0: return
         self.__loadBalance()
-        self.api.fetchListedCoinObjects(ViewModel.PORTFOLIO)
+        self.api.fetchListedCoinObjects(ListedViewModelEnum.PORTFOLIO)
         coins = self.api.portfolio_coins_array
         try:
             for i in range(len(coins)):
@@ -35,15 +33,10 @@ class PortfolioViewModel(ListedViewModel):
             print(e, '1')
         self.__setBalanceWidgets()
 
-    def __setBalanceWidgets(self):
-
-        self.setTotalBalance(sum(self.coin_balance_usd_dict.values()))
-        self.setPortfolioChange(sum(self.coin_balance_yesterday_usd_dict.values()))
-        self.setTotalProfit(sum(self.coin_profit_usd_dict.values()))
-        self.setNumberOfCoins(len(self.api.portfolio_coins_array))
 
     def __loadBalance(self):
-         with open(ViewModel.PORTFOLIO.value, 'r') as json_file:
+        #This method reads user's balance file and writes its reading to proper dictionaries
+        with open(ListedViewModelEnum.PORTFOLIO.value, 'r') as json_file:
             json_data = json.load(json_file)
             self.favourite_coin_dict = json_data['coins']
 
@@ -53,9 +46,16 @@ class PortfolioViewModel(ListedViewModel):
             self.coin_profit_usd_dict = dict()
             self.coin_profit_percentage_dict = dict()
             
+    def __setBalanceWidgets(self):
+        #This method is setting widgets to a proper values to reflect user's cryptocurrency balance
+        self.setTotalBalance(sum(self.coin_balance_usd_dict.values()))
+        self.setPortfolioChange(sum(self.coin_balance_yesterday_usd_dict.values()))
+        self.setTotalProfit(sum(self.coin_profit_usd_dict.values()))
+        self.setNumberOfCoins(len(self.api.portfolio_coins_array))
 
 
     def __calculateCoin(self, key, price, twenty_four_hour):
+        #This method calculate data for given coin and stores it to use it later to calculations and display
         self.coin_balance_usd_dict[key] = self.favourite_coin_dict[key]['amount'] * price
         self.coin_balance_crypto_dict[key] = self.favourite_coin_dict[key]['amount']
         self.coin_balance_yesterday_usd_dict[key] = self.favourite_coin_dict[key]['amount'] * price * (1.00 - twenty_four_hour) * 0.01
@@ -63,7 +63,8 @@ class PortfolioViewModel(ListedViewModel):
         self.coin_profit_percentage_dict[key] = (price / self.favourite_coin_dict[key]['price'] - 1.0) * 100.0
 
     def addRow(self, index, coin_id, no, coin_logo, coin_name, coin_symbol, price, one_hour, twenty_four_hour, seven_days):
-        
+        #This method overrides method from superclass because different styles need to by aplied in this view case
+        #This method configures and addes row to master view's table widget
         self.row_count += 1
         self.table_widget.setRowCount(self.row_count)
         self.table_widget.setRowHeight(index, int(28 * self.view.ratio))
@@ -145,7 +146,8 @@ class PortfolioViewModel(ListedViewModel):
         self.addItemAt(index, 7, coin_profit_widget, layout=coin_profit_layout, value=self.coin_profit_percentage_dict[coin_id])
 
     def addItemAt(self, row, column, item: QWidget, layout=None, value=None):
-
+        #This method overrides method from superclass because different styles need to by aplied in this view case
+        #Add proper widgets to proper cells in row and customize these cells
         if column in (3, 4, 5):
             if type(value) == str:
                 color = Color.WHITE.value
@@ -194,7 +196,7 @@ class PortfolioViewModel(ListedViewModel):
         self.table_widget.setCellWidget(row, column, item)
 
 
-
+    #Methods below were made to set values to proper widgets
     def setTotalBalance(self, value):
         self.view.portfolio_total_balance_widget_value.setText(utils.format_price(value))
 
@@ -214,9 +216,11 @@ class PortfolioViewModel(ListedViewModel):
         self.view.portfolio_number_of_coins_widgetvalue.setText(str(number))
 
     def getClickedRow(self, row, column):
-        self.main_vm.detailsRequest(self.api.portfolio_coins_array[row].id)
+        #Opens details view for clicked row's ID
+        self.main_vm.detailsRequest(self.api.table_widget[row].id)
         
     def clearView(self):
+        #This method resets values of widgets and erase table
         self.row_count = 0
         self.table_widget.setRowCount(0)
         self.setTotalBalance(0)

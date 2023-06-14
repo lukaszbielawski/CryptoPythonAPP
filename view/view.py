@@ -14,7 +14,8 @@ from PyQt5.QtGui import QBrush, QColor, QFont
 from PyQt5.QtCore import Qt, QPoint
 
 class View(object):
-        
+#This class contains mixed generated code from Qt Designer and hand-written views
+
     def __init__(self, ratio, window):
         self.ratio = ratio
         self.window = window
@@ -995,6 +996,28 @@ class View(object):
         self.retranslateUi(Form)
         self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Form)
+        self.__cfgTable(self.master_table_widget)
+        self.__cfgTable(self.favourites_table)
+        self.__cfgTable(self.portfolio_table_widget)
+
+    def __cfgTable(self, table_widget):
+        table_widget.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        table_widget.setFocusPolicy(Qt.NoFocus)
+        table_widget.setSelectionMode(QAbstractItemView.NoSelection)       
+       
+        table_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        table_widget.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        table_widget.horizontalHeader().setSectionResizeMode(QHeaderView.Fixed)
+        table_widget.verticalHeader().setMaximumSectionSize(int(36 * self.ratio))
+        table_widget.verticalHeader().setSectionResizeMode(QHeaderView.Fixed)
+
+        table_widget.setColumnWidth(0, int(91 * self.ratio))
+        table_widget.setColumnWidth(1, int(573 * self.ratio))
+        table_widget.setColumnWidth(2, int(282 * self.ratio))
+        table_widget.setColumnWidth(3, int(127 * self.ratio))
+        table_widget.setColumnWidth(4, int(127 * self.ratio))
+        table_widget.setColumnWidth(5, int(127 * self.ratio))
+        table_widget.setColumnWidth(6, int(255 * self.ratio))
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate

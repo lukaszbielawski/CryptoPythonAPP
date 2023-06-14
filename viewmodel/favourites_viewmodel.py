@@ -1,13 +1,10 @@
-from PyQt5 import QtCore, QtGui, QtWidgets, uic
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QTableWidgetItem, QAbstractItemView, QHeaderView, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy, QTableWidget
-from PyQt5.QtGui import QBrush, QColor, QFont
-from PyQt5.QtCore import Qt
-from view.view import View
+from PyQt5.QtWidgets import QTableWidget
 from viewmodel.listed_viewmodel import ListedViewModel
 from model.APIFetcher import APIFetcher
-from resources.Constants import ViewModel
+from resources.Constants import ListedViewModelEnum
 
 class FavouritesViewModel(ListedViewModel):
+    #This view model manages favourties view and control display of its widgets
     def __init__(self, ratio: float, main_vm, api: APIFetcher, table_widget: QTableWidget):
         super().__init__(ratio, main_vm, api, table_widget)
         self.api = api
@@ -15,8 +12,9 @@ class FavouritesViewModel(ListedViewModel):
         
 
     def loadFavourites(self):
-        if len(self.api.getSpecificCoinsID(ViewModel.FAVOURITES)) == 0: return
-        self.api.fetchListedCoinObjects(ViewModel.FAVOURITES)
+        #This method loads favourite coins from APIFetcher and adding rows that are representing these coins to view's table widget 
+        if len(self.api.getSpecificCoinsID(ListedViewModelEnum.FAVOURITES)) == 0: return
+        self.api.fetchListedCoinObjects(ListedViewModelEnum.FAVOURITES)
         coins = self.api.favourites_coins_array
         try:
             for i in range(len(coins)):
@@ -30,12 +28,15 @@ class FavouritesViewModel(ListedViewModel):
 
 
     def setNumberOfFavouriteCoinsValue(self, number):
+        #Sets number of coins that are favourite to display in proper widget
         self.view.favourites_number_of_favourite_coins_value.setText(str(number))
 
     def getClickedRow(self, row, column):
+        #Opens details view for clicked row's ID
         self.main_vm.detailsRequest(self.api.favourites_coins_array[row].id)
 
     def clearView(self):
+        #This method disconnect buttons to later avoid multiple connections and reseting table and number of favourite coins
         self.row_count = 0
         self.table_widget.setRowCount(0)
         self.setNumberOfFavouriteCoinsValue(0)

@@ -1,19 +1,14 @@
-from PyQt5 import QtCore, QtGui, QtWidgets, uic
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QTableWidgetItem, QAbstractItemView, QHeaderView, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy, QTableWidget
-from PyQt5.QtGui import QBrush, QColor, QFont
+from PyQt5.QtWidgets import QWidget, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy, QTableWidget
+from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
 from view.view import View
-import viewmodel.details_viewmodel as details_vm
 from model.APIFetcher import APIFetcher
 import model.coins_utils as utils
-import urllib, threading, io, os
-import urllib.request
-from urllib.request import Request
-import PIL, math
-from resources.Constants import Color, ViewModel
+from resources.Constants import Color
 from abc import ABC
 
 class ListedViewModel(ABC):
+    #Abstract class which contains many common fields and methods of favourites, portfolio and master view models 
     def __init__(self, view: View, main_vm, api: APIFetcher, table_widget: QTableWidget):
         self.view = view
         self.main_vm = main_vm
@@ -21,17 +16,18 @@ class ListedViewModel(ABC):
         self.row_count = 0
         self.table_widget = table_widget
         self._initFont()
-        self._cfgTable()
+        self.table_widget.cellClicked.connect(self.getClickedRow)
 
 
     def _initFont(self):
+        #Creates and stores font
         self.arial = QFont()
         self.arial.setFamily('Arial')
         self.arial.setPixelSize(int(20 * self.view.ratio))
         
 
     def addRow(self, index, coin_id, no, coin_logo, coin_name, coin_symbol, price, one_hour, twenty_four_hour, seven_days, volume, market_cap):
-        
+        #This method configures and addes row to proper table_widget 
         self.row_count += 1
         self.table_widget.setRowCount(self.row_count)
         self.table_widget.setRowHeight(index, int(28 * self.view.ratio))
@@ -57,7 +53,6 @@ class ListedViewModel(ABC):
 
         coin_data_widget.setLayout(coin_data_layout)
 
-
         self.addItemAt(index, 0, QLabel(str(no)))
         self.addItemAt(index, 1, coin_data_widget, layout=coin_data_layout) 
         self.addItemAt(index, 2, QLabel(utils.format_price(price)))
@@ -66,31 +61,10 @@ class ListedViewModel(ABC):
         self.addItemAt(index, 5, QLabel(utils.format_percentage(seven_days)), value=seven_days)
         self.addItemAt(index, 6, QLabel(utils.format_big_price(volume)))
         self.addItemAt(index, 7, QLabel(utils.format_big_price(market_cap)))
-
-    
-    def _cfgTable(self):
-        self.table_widget.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.table_widget.setFocusPolicy(Qt.NoFocus)
-        self.table_widget.setSelectionMode(QAbstractItemView.NoSelection)       
-       
-        self.table_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.table_widget.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.table_widget.horizontalHeader().setSectionResizeMode(QHeaderView.Fixed)
-        self.table_widget.verticalHeader().setMaximumSectionSize(int(36 * self.view.ratio))
-        self.table_widget.verticalHeader().setSectionResizeMode(QHeaderView.Fixed)
-
-        self.table_widget.setColumnWidth(0, int(91 * self.view.ratio))
-        self.table_widget.setColumnWidth(1, int(573 * self.view.ratio))
-        self.table_widget.setColumnWidth(2, int(282 * self.view.ratio))
-        self.table_widget.setColumnWidth(3, int(127 * self.view.ratio))
-        self.table_widget.setColumnWidth(4, int(127 * self.view.ratio))
-        self.table_widget.setColumnWidth(5, int(127 * self.view.ratio))
-        self.table_widget.setColumnWidth(6, int(255 * self.view.ratio))
-
-        self.table_widget.cellClicked.connect(self.getClickedRow)
+   
 
     def addItemAt(self, row, column, item: QWidget, layout=None, value=None):
-
+        #Add proper widgets to proper cells in row and customize these cells
         if column in (3, 4, 5):
             if value == None:
                 color = Color.WHITE.value
@@ -99,8 +73,7 @@ class ListedViewModel(ABC):
 
         match column:
             case 0:
-                color = Color.WHITE.value
-                
+                color = Color.WHITE.value     
             case 1:
                 coin_name_widget = layout.itemAt(1).widget()
                 coin_name_widget.setFont(self.arial)

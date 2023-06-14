@@ -1,31 +1,25 @@
-from PyQt5 import QtCore, QtGui, QtWidgets, uic
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QTableWidgetItem, QAbstractItemView, QHeaderView, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy, QTableWidget
-from PyQt5.QtGui import QBrush, QColor, QFont
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QTableWidget
 import view.view as view
-import viewmodel.details_viewmodel as details_vm
 from model.APIFetcher import APIFetcher
 import model.coins_utils as utils
-import urllib, threading, io, os
-import urllib.request
-from urllib.request import Request
-import PIL, math
-from resources.Constants import Color, ViewModel
+from resources.Constants import Color, ListedViewModelEnum
 from viewmodel.listed_viewmodel import ListedViewModel
 
 class MasterViewModel(ListedViewModel):
+    #This class manages master view and is responsible for proper pagination of fetched coins to table
     def __init__(self, ratio: float, main_vm, api: APIFetcher, table_widget: QTableWidget):
         super().__init__(ratio, main_vm, api, table_widget)
         self.table_widget.verticalScrollBar().valueChanged.connect(self.onMasterTableScroll)
         self.readyToScroll = True
         self.already_loaded = 0
         self.per_page = 40
+        #Amount of loaded coins per one load request
         self.loadGlobalStats()
         self.loadPage()
 
-    def onMasterTableScroll(self, *args):
+    def onMasterTableScroll(self):
+        #Called when table is scrolled, if bottom row index reached end, it loads up more coins
         rect = self.view.master_table_widget.viewport().rect()
-        # top_index = self.view.master_table_widget.indexAt(rect.topLeft()).row()
         bottom_index = self.view.master_table_widget.indexAt(rect.bottomLeft()).row()
         if bottom_index + 1 == self.already_loaded and self.readyToScroll:
             self.readyToScroll = False
@@ -33,8 +27,10 @@ class MasterViewModel(ListedViewModel):
             self.readyToScroll = True
 
     def loadPage(self):
+        #Called when there is no more coins left fetched by api and still there is request to load more coins
         if self.already_loaded + self.per_page > self.api.get_coins_loaded():
-            self.api.fetchListedCoinObjects(ViewModel.MASTER)
+            self.api.fetchListedCoinObjects(ListedViewModelEnum.MASTER)
+            #Calling this method adds another 250 coins to coin pool
         try:
             coins = self.api.master_coins_array
             for i in range(self.per_page):
@@ -47,13 +43,15 @@ class MasterViewModel(ListedViewModel):
             print(e)
 
     def loadGlobalStats(self):
+        #This method is setting up widgets according to global data fetch by APIFetcher
         global_data = self.api.global_data
         self.setMarketCapSuffixLabel(global_data.total_market_cap, global_data.market_cap_change_percentage_24h)
         self.setMarketCapWidgetValue(global_data.total_market_cap)
         self.setTradingVolumeWidgetValue(global_data.total_volume)
         self.setBtcDominanceWidgetValue(global_data.btc_dominance)
         self.setNumberOfCoinsValue(global_data.active_cryptocurrencies)
-        
+    
+    #Below methods are setting up proper widgets
     def setMarketCapSuffixLabel(self, value, change):
         if change >= 0:
             self.view.market_cap_suffix_label.setText(f'{utils.convert_number_to_written(value)}, a <font color={Color.GREEN.value}>{utils.format_percentage(change)}</font> increase in the last 24 hours.')
@@ -72,7 +70,10 @@ class MasterViewModel(ListedViewModel):
     def setNumberOfCoinsValue(self, value):
         self.view.number_of_coins_widget_value.setText(utils.format_number(value))
 
+
+
     def getClickedRow(self, row, column):
+        #Opens details view for clicked row's ID
         self.main_vm.detailsRequest(self.api.master_coins_array[row].id)
 
 

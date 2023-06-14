@@ -1,22 +1,21 @@
-from PyQt5 import QtCore, QtGui, QtWidgets, uic
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QTableWidgetItem, QAbstractItemView, QHeaderView, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy
-from PyQt5.QtGui import QBrush, QColor, QFont
+from PyQt5 import QtCore, QtWidgets
+from PyQt5.QtWidgets import QLabel
+from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
-import view.view as view
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta
-import math
+from datetime import timedelta
+import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from matplotlib.figure import Figure
-import matplotlib.figure, json
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
+import view.view as view
 from model.APIFetcher import APIFetcher
 import model.coins_utils as utils
-from resources.Constants import Color, ViewModel, DetailsStarButton,  DetailsPortfolioButton
+from resources.Constants import Color, ListedViewModelEnum, DetailsStarButton,  DetailsPortfolioButton
+import matplotlib.figure, json, math
 
 class DetailsViewModel():
+    #This class contains detailed data about an user-chosen coin
     def __init__(self, main_vm, view: view.View, api: APIFetcher, coin_id):
         self.view = view
         self.main_vm = main_vm
@@ -27,30 +26,28 @@ class DetailsViewModel():
         self.__cfgButtons()
         self.__setDetails()
         
-
-        
     def __cfgButtons(self):
-        with open(ViewModel.FAVOURITES.value, 'r') as favourites_file:
+        #This method is setting buttons to a proper state regarding data readen from locally stored files
+        with open(ListedViewModelEnum.FAVOURITES.value, 'r') as favourites_file:
             favourites_dict = json.load(favourites_file)
             self.isFavourite = self.coin_id in favourites_dict['coins']
 
-        with open(ViewModel.PORTFOLIO.value, 'r') as portfolio_file:
+        with open(ListedViewModelEnum.PORTFOLIO.value, 'r') as portfolio_file:
             portfolio_dict = json.load(portfolio_file)
             self.isInPortfolio = self.coin_id in portfolio_dict['coins'].keys()
 
         self.view.details_star_button.clicked.connect(self.clickedFavouriteButton)
         self.view.details_plus_button.clicked.connect(self.clickedPlusButton)
         self.view.details_portfolio_tick_button.clicked.connect(self.clickedTickButton)
+        #This methods linkes buttons to proper functions
 
         self.__hidePortfolioForm()
 
         self.__setDetailsPortfolioButton(DetailsPortfolioButton.TRASH if self.isInPortfolio else DetailsPortfolioButton.FILL)
         self.__setDetailsStarButton(DetailsStarButton.FILL if self.isFavourite else DetailsStarButton.EMPTY)
-
-
-        # print(self.isFavourite, self.isInPortfolio)
        
     def __setDetails(self):
+        #This method displays coin details to user
         self.setRank(self.coin_details.market_cap_rank)
         self.setDetailsCoinID(self.coin_details.id, self.coin_details.image, self.coin_details.name, self.coin_details.symbol)
 
@@ -67,7 +64,7 @@ class DetailsViewModel():
         self.setTimeChangeTableValues(self.coin_details.price_change_percentage_1h, self.coin_details.price_change_percentage_24h, self.coin_details.price_change_percentage_7d,
                                   self.coin_details.price_change_percentage_14d, self.coin_details.price_change_percentage_30d, self.coin_details.price_change_percentage_1y)
 
-
+    #Below methods are setting widget values to display to user
     def setRank(self, value):
         try:
             self.view.rank_label.setMaximumSize(QtCore.QSize(int((70 + math.floor(math.log10(value)) * 15) * self.view.ratio), int(30 * self.view.ratio)))
@@ -152,6 +149,7 @@ class DetailsViewModel():
             self.view.time_change_table.setCellWidget(0, column, item)   
 
     def clickedFavouriteButton(self):
+        #This method changes state of star button when it is clicked and call proper methods to match expected behaviour
         self.changed = True
         if self.isFavourite:
             self.__setDetailsStarButton(DetailsStarButton.EMPTY)
@@ -163,6 +161,7 @@ class DetailsViewModel():
             self.isFavourite = True
         
     def clickedPlusButton(self):
+        #This method changes state of plus button when it is clicked and call proper methods to match expected behaviour
         if self.plusButtonState == 2:
             self.__removePortfolioEntry()
             self.__setDetailsPortfolioButton(DetailsPortfolioButton.FILL)
@@ -174,6 +173,7 @@ class DetailsViewModel():
             self.__setDetailsPortfolioButton(DetailsPortfolioButton.FILL)
     
     def clickedTickButton(self):
+        #This method uses input given by user in QLineEdits and passes it to method responsible for adding entry to portfolio
         try:
             amount = float(self.view.details_portfolio_bought_amount_text.text())
             price = float(self.view.details_portfolio_price_text.text())
@@ -194,12 +194,14 @@ class DetailsViewModel():
             print(e)
     
     def __setDetailsStarButton(self, state):
+        #This method changes star button apperance regarding of given state
         if state == DetailsStarButton.FILL:
             self.view.details_star_button.setStyleSheet("border-image: url(./resources/star_fill.png);\nbackground: " + Color.TRANSPARENT.value + ";")
         else:
             self.view.details_star_button.setStyleSheet("border-image: url(./resources/star_empty.png);\nbackground: " + Color.TRANSPARENT.value + ";")
 
     def __setDetailsPortfolioButton(self, state):
+        #This method changes plus button apperance regarding of given state
         if state == DetailsPortfolioButton.FILL:
             self.view.details_plus_button.setStyleSheet("border-image: url(./resources/plus_fill.png);\nbackground: " + Color.TRANSPARENT.value + ";")
         elif state == DetailsPortfolioButton.EMPTY:
@@ -209,6 +211,7 @@ class DetailsViewModel():
         self.plusButtonState = state.value
 
     def __hidePortfolioForm(self):
+        #This method hide widgets that are responsible for interacting with user in order to make new portfolio entry or remove old one
         self.view.details_portfolio_bought_amount_label.hide()
         self.view.details_portfolio_bought_amount_text.hide()
         self.view.details_portfolio_price_label.hide()
@@ -216,6 +219,7 @@ class DetailsViewModel():
         self.view.details_portfolio_tick_button.hide()
 
     def __showPortfolioForm(self):
+        #This method show widgets that are responsible for interacting with user in order to make new portfolio entry or remove old one
         self.view.details_portfolio_bought_amount_label.show()
         self.view.details_portfolio_bought_amount_text.show()
         self.view.details_portfolio_price_label.show()
@@ -223,18 +227,20 @@ class DetailsViewModel():
         self.view.details_portfolio_tick_button.show()
        
     def __cfgPlot(self, sparkline, last_updated):
+        #This method creates class responsible for creating plot which matches given coin sparklines
         matplotlib.use('QT5Agg')
         class MplCanvas(FigureCanvasQTAgg):
+            #This class using matplotlib creates plot representing entries from seven days before last_updated date
             def __init__(self, parent: DetailsViewModel):
                 self.parent = parent
-                self.figure = Figure(figsize=(0, 0), constrained_layout=True,)
-                # self.figure.tight_layout()
+                self.figure = Figure(figsize=(0, 0), constrained_layout=True)
                 self.__createPlot(sparkline, last_updated)
                 FigureCanvasQTAgg.__init__(self, self.figure)
                 FigureCanvasQTAgg.setSizePolicy(self, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
                 FigureCanvasQTAgg.updateGeometry(self)
 
             def __createPlot(self, sparkline, last_updated):
+                #This method creates plot matching sparklines and customize it
                 self.figure.patch.set_facecolor(Color.BLACK.value)
                 
                 y = sparkline
@@ -264,9 +270,11 @@ class DetailsViewModel():
 
         
         self.view.plot_container_layout.addWidget(MplCanvas(self))
+        #Adding chart to view
 
     def __addPortfolioEntry(self, amount, price):
-        with open(ViewModel.PORTFOLIO.value, 'r+') as portfolio_file:
+        #This method opens and add entry to portfolio's file
+        with open(ListedViewModelEnum.PORTFOLIO.value, 'r+') as portfolio_file:
             portfolio_dict = json.load(portfolio_file)
             portfolio_dict['coins'][self.coin_id] = dict()
             portfolio_dict['coins'][self.coin_id]['amount'] = amount
@@ -277,9 +285,11 @@ class DetailsViewModel():
             portfolio_file.write(portfolio_json)
             portfolio_file.truncate()
         self.main_vm.update_portfolio = True
+        #This informs main viewmodel that portfolio was updated
 
     def __removePortfolioEntry(self):
-        with open(ViewModel.PORTFOLIO.value, 'r+') as portfolio_file:
+        #This method opens and removes entry from portfolio's file
+        with open(ListedViewModelEnum.PORTFOLIO.value, 'r+') as portfolio_file:
             portfolio_dict = json.load(portfolio_file)
             portfolio_dict['coins'].pop(self.coin_id)
             portfolio_json = json.dumps(portfolio_dict, indent=4)
@@ -288,9 +298,11 @@ class DetailsViewModel():
             portfolio_file.write(portfolio_json)
             portfolio_file.truncate()
         self.main_vm.update_portfolio = True
+        #This informs main viewmodel that portfolio was updated
 
     def __addFavouritesEntry(self):
-        with open(ViewModel.FAVOURITES.value, 'r+') as favourites_file:
+        #This method opens and add entry to favourites' file
+        with open(ListedViewModelEnum.FAVOURITES.value, 'r+') as favourites_file:
             favourites_dict = json.load(favourites_file)
             favourites_dict['coins'].append(self.coin_id)
             favourites_json = json.dumps(favourites_dict, indent=4)
@@ -299,9 +311,11 @@ class DetailsViewModel():
             favourites_file.write(favourites_json)
             favourites_file.truncate()
         self.main_vm.update_favourites = True
+        #This informs main viewmodel that favourites were updated
 
     def __removeFavouritesEntry(self):
-        with open(ViewModel.FAVOURITES.value, 'r+') as favourites_file:
+        #This method opens and removes entry from favourites' file
+        with open(ListedViewModelEnum.FAVOURITES.value, 'r+') as favourites_file:
             favourites_dict = json.load(favourites_file)
             favourites_dict['coins'].remove(self.coin_id)
             favourites_json = json.dumps(favourites_dict, indent=4)
@@ -310,8 +324,10 @@ class DetailsViewModel():
             favourites_file.write(favourites_json)
             favourites_file.truncate()
         self.main_vm.update_favourites = True
+        #This informs main viewmodel that favourites were updated
     
     def clearView(self):
+        #This method disconnect buttons and disconnect plot from storing it view to later avoid multiple connections
         plot = self.view.plot_container_layout.itemAt(0)
         plot.widget().setParent(None)
         
