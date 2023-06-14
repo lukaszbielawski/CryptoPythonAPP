@@ -30,6 +30,14 @@ pip install -r requirements.txt
  ## Usage
  
 <ol>
+  <li>Change screen ratio in main.py if needed:</li>
+  
+```python
+if __name__ == '__main__':
+    ratio = 1
+    #Screen ratio value is needed to display views in proper scale
+    app = Application(sys.argv, ratio)
+ ```
   <li>Run the application:</li>
   
 ```bash
