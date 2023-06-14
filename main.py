@@ -24,7 +24,7 @@ class Application(QApplication):
         sys.exit(self.exec_())
 
 if __name__ == '__main__':
-    ratio = 0.66
+    ratio = 1
     #Screen ratio value is needed to display views in proper scale
     app = Application(sys.argv, ratio)
    
