@@ -8,6 +8,14 @@ CryptoPythonAPP is a Python application that allows users to browse and manage c
   <li>Portfolio Management: Users can create and manage their crypto coin portfolio by adding coins to their portfolio. The portfolio provides an overview of all the coins a user is currently holding.
 </ul>
 
+## Presentation
+
+
+
+https://github.com/lukaszbielawski/CryptoPythonAPP/assets/44624897/36f4d3dc-65ff-41eb-ba3a-2ebfb9f92d6d
+
+
+
 ## Installation
 <ol>
   <li>Clone the repository</li>
